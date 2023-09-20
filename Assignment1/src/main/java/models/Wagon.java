@@ -9,7 +9,6 @@ public class Wagon {
                                     // a.k.a. the predecessor of this wagon in a sequence
                                     // set to null if no predecessor is connected
 
-
     // representation invariant propositions:
     // tail-connection-invariant:   wagon.nextWagon == null or wagon == wagon.nextWagon.previousWagon
     // front-connection-invariant:  wagon.previousWagon == null or wagon = wagon.previousWagon.nextWagon
@@ -41,9 +40,7 @@ public class Wagon {
      * @return  whether this wagon has a wagon prepended at the front
      */
     public boolean hasPreviousWagon() {
-        // TODO
-
-        return false;
+        return previousWagon != null;
     }
 
     /**
@@ -90,14 +87,12 @@ public class Wagon {
      */
     public void attachTail(Wagon tail) {
         // TODO verify the exceptions
-
         // TODO attach the tail wagon to this wagon (sustaining the invariant propositions).
         if (this.hasNextWagon()) {
-            throw new IllegalStateException(tail.toString() + " has already been attached to " + tail.getPreviousWagon().toString());
+            throw new IllegalStateException(this + " has already been attached to " + this.getNextWagon());
         }
         if (tail.hasPreviousWagon()) {
-            throw new IllegalStateException(
-                String.format(tail.getPreviousWagon() + " is already pulling " + tail.toString()));
+            throw new IllegalStateException(tail.getPreviousWagon() + " is already pulling " + tail);
         }
         this.nextWagon = tail;
         tail.previousWagon = this;
@@ -111,8 +106,12 @@ public class Wagon {
     public Wagon detachTail() {
         // TODO detach the tail from this wagon (sustaining the invariant propositions).
         //  and return the head wagon of that tail
-
-        return null;
+        Wagon tail = this.getNextWagon();
+        if (tail != null) {
+            tail.previousWagon = null;
+            this.nextWagon = null;
+        }
+        return tail;
     }
 
     /**
@@ -124,8 +123,12 @@ public class Wagon {
     public Wagon detachFront() {
         // TODO detach this wagon from its predecessor (sustaining the invariant propositions).
         //   and return that predecessor
-
-        return null;
+        Wagon front = this.getPreviousWagon();
+        if (front != null) {
+            front.nextWagon = null;
+            this.previousWagon = null;
+        }
+        return front;
     }
 
     /**
@@ -137,8 +140,15 @@ public class Wagon {
      */
     public void reAttachTo(Wagon front) {
         // TODO detach any existing connections that will be rearranged
-
         // TODO attach this wagon to its new predecessor front (sustaining the invariant propositions).
+        if (this == front || front == null) {
+            return; // No change needed
+        }
+
+        front.detachTail();
+        this.detachFront();
+
+        front.attachTail(this);
     }
 
     /**
