@@ -156,7 +156,12 @@ public class Wagon {
      * and reconnects its tail to the wagon in front of it, if any.
      */
     public void removeFromSequence() {
-        // TODO
+        if (this.hasPreviousWagon()) {
+            this.previousWagon.attachTail(this.getNextWagon());
+            this.detachFront();
+        } else if (this.hasNextWagon()) {
+            this.getNextWagon().detachFront();
+        }
     }
 
 
@@ -169,8 +174,18 @@ public class Wagon {
     public Wagon reverseSequence() {
         // TODO provide an iterative implementation,
         //   using attach- and detach methods of this class
-
-        return null;
+        Wagon current = this;
+        Wagon prev = null;
+        while (current != null) {
+            Wagon next = current.getNextWagon();
+            current.nextWagon = prev;
+            prev = current;
+            current = next;
+        }
+        if (prev != null) {
+            prev.reAttachTo(this);
+        }
+        return prev;
     }
 
     // TODO string representation of a Wagon
