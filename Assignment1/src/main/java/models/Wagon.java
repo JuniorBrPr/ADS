@@ -49,7 +49,6 @@ public class Wagon {
      * @return  the last wagon
      */
     public Wagon getLastWagonAttached() {
-        // TODO find the last wagon in the sequence
         Wagon currentWagon = this;
 
         while (currentWagon.hasNextWagon()) { // Loop until there is no followup
@@ -64,7 +63,6 @@ public class Wagon {
      * including this wagon itself.
      */
     public int getSequenceLength() {
-        // TODO traverse the sequence and find its length
         int length = 1;
         Wagon currentWagon = this;
         while (currentWagon.hasNextWagon()) {
@@ -86,8 +84,6 @@ public class Wagon {
      *          or:   "%s has already been attached to %s"
      */
     public void attachTail(Wagon tail) {
-        // TODO verify the exceptions
-        // TODO attach the tail wagon to this wagon (sustaining the invariant propositions).
         if (this.hasNextWagon()) {
             throw new IllegalStateException(this + " has already been attached to " + this.getNextWagon());
         }
@@ -104,8 +100,6 @@ public class Wagon {
      *          or <code>null</code> if it had no wagons attached to its tail.
      */
     public Wagon detachTail() {
-        // TODO detach the tail from this wagon (sustaining the invariant propositions).
-        //  and return the head wagon of that tail
         Wagon tail = this.getNextWagon();
         if (tail != null) {
             tail.previousWagon = null;
@@ -121,8 +115,6 @@ public class Wagon {
      *          or <code>null</code> if it had no previousWagon.
      */
     public Wagon detachFront() {
-        // TODO detach this wagon from its predecessor (sustaining the invariant propositions).
-        //   and return that predecessor
         Wagon front = this.getPreviousWagon();
         if (front != null) {
             front.nextWagon = null;
@@ -139,8 +131,6 @@ public class Wagon {
      * @param front the wagon to which this wagon must be attached to.
      */
     public void reAttachTo(Wagon front) {
-        // TODO detach any existing connections that will be rearranged
-        // TODO attach this wagon to its new predecessor front (sustaining the invariant propositions).
         if (this == front || front == null) {
             return; // No change needed
         }
@@ -188,7 +178,6 @@ public class Wagon {
         return prev;
     }
 
-    // TODO string representation of a Wagon
     @Override
     public String toString() {
         return "[Wagon-" + id + "]";
