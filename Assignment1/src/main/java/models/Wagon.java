@@ -146,14 +146,18 @@ public abstract class Wagon {
      * and reconnects its tail to the wagon in front of it, if any.
      */
     public void removeFromSequence() {
-        if (this.hasPreviousWagon()) {
-            this.previousWagon.attachTail(this.getNextWagon());
-            this.detachFront();
-        } else if (this.hasNextWagon()) {
-            this.getNextWagon().detachFront();
+        if (!this.hasPreviousWagon()) {
+            this.detachTail();
+            return;
         }
+        if (!this.hasNextWagon()) {
+            this.detachFront();
+            return;
+        }
+        Wagon front = this.detachFront();
+        Wagon tail = this.detachTail();
+        tail.reAttachTo(front);
     }
-
 
     /**
      * Reverses the order in the sequence of wagons from this Wagon until its final successor.
