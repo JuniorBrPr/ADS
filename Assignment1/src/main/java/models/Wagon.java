@@ -172,18 +172,6 @@ public abstract class Wagon {
      * @return the new start Wagon of the reversed sequence (with is the former last Wagon of the original sequence)
      */
     public Wagon reverseSequence() {
-//        Wagon current = this;
-//        Wagon prev = null;
-//        while (current != null) {
-//            Wagon next = current.getNextWagon();
-//            current.nextWagon = prev;
-//            prev = current;
-//            current = next;
-//        }
-//        if (prev != null) {
-//            prev.reAttachTo(this);
-//        }
-//        return prev;
         Wagon originalHead = this.getPreviousWagon();
         Wagon current = this;
         Wagon prev = null;
@@ -197,10 +185,14 @@ public abstract class Wagon {
         }
 
         if (originalHead != null) {
-            prev.reAttachTo(originalHead);
+            prev.previousWagon = originalHead;
+            originalHead.nextWagon = prev;
         }
+
         return prev;
     }
+
+
 
     @Override
     public String toString() {
