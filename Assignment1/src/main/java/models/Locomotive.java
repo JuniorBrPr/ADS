@@ -1,9 +1,13 @@
 package models;
 
+
+/**
+ * A locomotive is the head of a train.
+ *
+ */
 public class Locomotive {
     private int locNumber;
     private int maxWagons;
-
 
     public Locomotive(int locNumber, int maxWagons) {
         this.locNumber = locNumber;

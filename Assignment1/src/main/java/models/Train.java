@@ -2,16 +2,15 @@ package models;
 
 import java.util.HashSet;
 
+
+/**
+ * A Train is a sequence of Wagons
+ */
 public class Train {
     private final String origin;
     private final String destination;
     private final Locomotive engine;
     private Wagon firstWagon;
-
-    /* Representation invariants:
-        firstWagon == null || firstWagon.previousWagon == null
-        engine != null
-     */
 
     public Train(Locomotive engine, String origin, String destination) {
         this.engine = engine;

@@ -1,5 +1,9 @@
 package models;
 
+
+/**
+ * A FreightWagon is a node in a doubly linked list of wagons.
+ */
 public class FreightWagon extends Wagon {
 
     public int maxWeight;

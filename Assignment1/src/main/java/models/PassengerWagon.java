@@ -1,7 +1,10 @@
 package models;
 
-public class PassengerWagon extends Wagon {
 
+/**
+ * A PassengerWagon is a node in a doubly linked list of wagons.
+ */
+public class PassengerWagon extends Wagon {
     public int numberOfSeats;
 
     public PassengerWagon(int wagonId, int numberOfSeats) {
