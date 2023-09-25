@@ -52,8 +52,8 @@ public abstract class Wagon {
     public Wagon getLastWagonAttached() {
         Wagon currentWagon = this;
 
-        while (currentWagon.hasNextWagon()) { // Loop until there is no followup
-            currentWagon = currentWagon.getNextWagon(); // Sets its wagon as followup
+        while (currentWagon.hasNextWagon()) {
+            currentWagon = currentWagon.getNextWagon();
         }
 
         return currentWagon;
@@ -86,6 +86,9 @@ public abstract class Wagon {
      *                               or:   "%s has already been attached to %s"
      */
     public void attachTail(Wagon tail) {
+        if (tail == null) {
+            return;
+        }
         if (this.hasNextWagon()) {
             throw new IllegalStateException(this + " has already been attached to " + this.getNextWagon());
         }
