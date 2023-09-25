@@ -248,14 +248,12 @@ public class Train {
             return false;
         }
 
-        if (firstWagon != null) {
-            Wagon originalFirstWagon = firstWagon;
-            Wagon currentWagon = wagon;
+        if (wagon.hasPreviousWagon()){
+            wagon.detachFront();
+        }
 
-            while (currentWagon.hasNextWagon()) {
-                currentWagon = currentWagon.getNextWagon();
-            }
-            currentWagon.attachTail(originalFirstWagon);
+        if (firstWagon != null) {
+            wagon.getLastWagonAttached().attachTail(firstWagon);
         }
 
         firstWagon = wagon;
