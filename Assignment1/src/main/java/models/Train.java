@@ -280,20 +280,26 @@ public class Train {
             return false;
         }
 
-        Wagon currentWagon = firstWagon;
-
-        for (int i = 0; i < position; i++) {
-            currentWagon = currentWagon.getNextWagon();
+        if (wagon.hasPreviousWagon()){
+            wagon.detachFront();
         }
 
-        Wagon originalNextWagon = currentWagon.getNextWagon();
-        currentWagon.attachTail(wagon);
-
-        while (currentWagon.hasNextWagon()) {
-            currentWagon = currentWagon.getNextWagon();
+        if (position == 0) {
+            return insertAtFront(wagon);
         }
 
-        currentWagon.attachTail(originalNextWagon);
+        Wagon wagonAtPosition = findWagonAtPosition(position);
+
+        if (wagonAtPosition == null) {
+            firstWagon.getLastWagonAttached().attachTail(wagon);
+            return true;
+        }
+
+        if (wagonAtPosition.hasPreviousWagon()) {
+            wagonAtPosition.detachFront();
+            wagon.getLastWagonAttached().attachTail(wagonAtPosition);
+            firstWagon.getLastWagonAttached().attachTail(wagon);
+        }
         return true;
     }
 
