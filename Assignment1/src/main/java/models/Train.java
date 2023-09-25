@@ -326,7 +326,24 @@ public class Train {
             return false;
         }
 
-        wagon.removeFromSequence();
+        if (wagon.hasPreviousWagon() && wagon.hasNextWagon()) {
+            wagon.detachFront().attachTail(wagon.detachTail());
+            toTrain.attachToRear(wagon);
+            return true;
+        }
+
+        if (wagon.hasPreviousWagon()) {
+            wagon.detachFront();
+        }
+
+        if (wagon.hasNextWagon() && wagon == firstWagon) {
+            firstWagon = wagon.detachTail();
+        }
+
+        if (wagon == firstWagon) {
+            firstWagon = null;
+        }
+
         toTrain.attachToRear(wagon);
         return true;
     }
