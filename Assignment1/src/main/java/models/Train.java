@@ -1,8 +1,5 @@
 package models;
 
-import java.util.HashSet;
-
-
 /**
  * A Train is a sequence of Wagons
  */
@@ -187,21 +184,13 @@ public class Train {
             return false;
         }
 
-        HashSet<Wagon> wagons = new HashSet<>();
         Wagon currentWagon = firstWagon;
         while (currentWagon.hasNextWagon()) {
-            wagons.add(currentWagon);
-            currentWagon = currentWagon.getNextWagon();
-        }
-
-        currentWagon = wagon;
-        while (currentWagon.hasNextWagon()) {
-            if (wagons.contains(currentWagon)) {
+            if (currentWagon == wagon) {
                 return false;
             }
             currentWagon = currentWagon.getNextWagon();
         }
-
         return true;
     }
 
@@ -219,7 +208,7 @@ public class Train {
             return false;
         }
 
-        if (wagon.hasPreviousWagon()){
+        if (wagon.hasPreviousWagon()) {
             wagon.detachFront();
         }
 
@@ -247,7 +236,7 @@ public class Train {
             return false;
         }
 
-        if (wagon.hasPreviousWagon()){
+        if (wagon.hasPreviousWagon()) {
             wagon.detachFront();
         }
 
@@ -279,7 +268,7 @@ public class Train {
             return false;
         }
 
-        if (wagon.hasPreviousWagon()){
+        if (wagon.hasPreviousWagon()) {
             wagon.detachFront();
         }
 
