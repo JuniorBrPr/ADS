@@ -395,7 +395,7 @@ public class Train {
         if (firstWagon == null || !firstWagon.hasNextWagon()) {
             return;
         }
-        firstWagon.reverseSequence();
+        firstWagon = firstWagon.reverseSequence();
     }
 
     @Override
