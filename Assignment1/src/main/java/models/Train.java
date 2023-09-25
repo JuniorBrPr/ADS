@@ -344,14 +344,21 @@ public class Train {
      * @return whether the move could be completed successfully
      */
     public boolean splitAtPosition(int position, Train toTrain) {
-        if (position < firstWagon.getSequenceLength()) {
+        if (firstWagon == null || position < 0 || position >= getNumberOfWagons()) {
             return false;
         }
-        if (toTrain.engine.getMaxWagons() < toTrain.getNumberOfWagons() + firstWagon.getSequenceLength() - position) {
+
+        if (toTrain.engine.getMaxWagons() < toTrain.getNumberOfWagons() + getNumberOfWagons() - position) {
             return false;
         }
         if (!toTrain.canAttach(findWagonAtPosition(position))) {
             return false;
+        }
+
+        if (position == 0) {
+            toTrain.attachToRear(firstWagon);
+            firstWagon = null;
+            return true;
         }
 
         Wagon wagon = findWagonAtPosition(position);
