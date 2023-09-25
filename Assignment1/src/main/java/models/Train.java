@@ -220,16 +220,13 @@ public class Train {
             return false;
         }
 
+        if (wagon.hasPreviousWagon()){
+            wagon.detachFront();
+        }
+
         if (firstWagon == null) {
             firstWagon = wagon;
             return true;
-        }
-
-
-        if (wagon.hasNextWagon()){
-            Wagon newTail = wagon.detachTail();
-            newTail.getLastWagonAttached().attachTail(wagon);
-            wagon = newTail;
         }
 
         firstWagon.getLastWagonAttached().attachTail(wagon);
