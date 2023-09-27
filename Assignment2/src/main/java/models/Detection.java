@@ -72,12 +72,8 @@ public class Detection {
         return dateTime;
     }
 
-
     @Override
     public String toString() {
-        // TODO represent the detection in the format: licensePlate/city/dateTime
-
-        return "TODO:Detection.toString";       // replace by a proper outcome
-    }
-
+        return car.getLicensePlate() + "/" + city + "/" + dateTime;
+    }        
 }
