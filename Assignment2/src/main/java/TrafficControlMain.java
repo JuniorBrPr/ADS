@@ -32,8 +32,5 @@ public class TrafficControlMain {
         // report top-5 violations from different aggregation criteria
         System.out.printf("Top 5 cars with largest total number of offences are:\n%s\n", trafficTracker.topViolationsByCar(5));
         System.out.printf("Top 5 cities with largest total number of offences are:\n%s\n", trafficTracker.topViolationsByCity(5));
-
     }
-
-
 }

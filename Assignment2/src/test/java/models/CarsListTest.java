@@ -57,7 +57,6 @@ public class CarsListTest {
                 sortOrder.compare(volvo1, volvo2), lessThan(0));
         assertThat("cars should be sorted by increasing license plate number",
                 sortOrder.compare(volvo2, volvo1), greaterThan(0));
-
     }
 
     @Test

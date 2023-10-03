@@ -1,6 +1,8 @@
 package models;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -8,12 +10,13 @@ import static models.Car.CarType;
 import static models.Car.FuelType;
 
 public class Detection {
-    private final Car car;                  // the car that was detected
-    private final String city;              // the name of the city where the detector was located
-    private final LocalDateTime dateTime;   // date and time of the detection event
+    private final Car car; // the car that was detected
+    private final String city; // the name of the city where the detector was located
+    private final LocalDateTime dateTime; // date and time of the detection event
 
-    /* Representation Invariant:
-     *      every Detection shall be associated with a valid Car
+    /*
+     * Representation Invariant:
+     * every Detection shall be associated with a valid Car
      */
 
     public Detection(Car car, String city, LocalDateTime dateTime) {
@@ -23,39 +26,78 @@ public class Detection {
     }
 
     /**
-     * Parses detection information from a line of text about a car that has entered an environmentally controlled zone
+     * Parses detection information from a line of text about a car that has entered
+     * an environmentally controlled zone
      * of a specified city.
      * the format of the text line is: lisensePlate, city, dateTime
      * The licensePlate shall be matched with a car from the provided list.
-     * If no matching car can be found, a new Car shall be instantiated with the given lisensePlate and added to the list
-     * (besides the license plate number there will be no other information available about this car)
+     * If no matching car can be found, a new Car shall be instantiated with the
+     * given lisensePlate and added to the list
+     * (besides the license plate number there will be no other information
+     * available about this car)
+     * 
      * @param textLine
      * @param cars     a list of known cars, ordered and searchable by licensePlate
-     *                 (i.e. the indexOf method of the list shall only consider the lisensePlate when comparing cars)
+     *                 (i.e. the indexOf method of the list shall only consider the
+     *                 lisensePlate when comparing cars)
      * @return a new Detection instance with the provided information
-     * or null if the textLine is corrupt or incomplete
+     *         or null if the textLine is corrupt or incomplete
      */
     public static Detection fromLine(String textLine, List<Car> cars) {
         Detection newDetection = null;
 
         // TODO convert the information in the textLine into a new Detection instance
-        //  use the cars.indexOf to find the car that is associated with the licensePlate of the detection
-        //  if no car can be found a new Car shall be instantiated and added to the list and associated with the detection
+        // use the cars.indexOf to find the car that is associated with the licensePlate
+        // of the detection
+        // if no car can be found a new Car shall be instantiated and added to the list
+        // and associated with the detection
 
+        // Split the textLine into its components
+        String[] parts = textLine.split(",");
+
+        // Check if the textLine contains all the required information
+        if (parts.length == 3) {
+            String licensePlate = parts[0].trim();
+            String city = parts[1].trim();
+            LocalDateTime dateTime = LocalDateTime.parse(parts[2].trim());
+
+            // Search for the car in the list using licensePlate
+            int carIndex = -1;
+            for (int i = 0; i < cars.size(); i++) {
+                if (cars.get(i).getLicensePlate().equals(licensePlate)) {
+                    carIndex = i;
+                    break;
+                }
+            }
+
+            // If the car is not found, create a new Car and add it to the list
+            if (carIndex == -1) {
+                Car newCar = new Car(licensePlate);
+                cars.add(newCar);
+                carIndex = cars.size() - 1;
+            }
+
+            // Create a new Detection instance
+            newDetection = new Detection(cars.get(carIndex), city, dateTime);
+        }
 
         return newDetection;
     }
 
     /**
-     * Validates a detection against the purple conditions for entering an environmentally restricted zone
+     * Validates a detection against the purple conditions for entering an
+     * environmentally restricted zone
      * I.e.:
-     * Diesel trucks and diesel coaches with an emission category of below 6 may not enter a purple zone
-     * @return a Violation instance if the detection saw an offence against the purple zone rule/
-     *          null if no offence was found.
+     * Diesel trucks and diesel coaches with an emission category of below 6 may not
+     * enter a purple zone
+     * 
+     * @return a Violation instance if the detection saw an offence against the
+     *         purple zone rule/
+     *         null if no offence was found.
      */
     public Violation validatePurple() {
-        // TODO validate that diesel trucks and diesel coaches have an emission category of 6 or above
-
+        // TODO validate that diesel trucks and diesel coaches have an emission category
+        // of 6 or above
 
         return null;
     }
@@ -75,5 +117,5 @@ public class Detection {
     @Override
     public String toString() {
         return car.getLicensePlate() + "/" + city + "/" + dateTime;
-    }        
+    }
 }
