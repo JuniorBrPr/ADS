@@ -119,7 +119,6 @@ public class Car implements Comparable<Car> {
 
     @Override
     public String toString() {
-
         return String.format("%s/%d/%s/%s",
                 this.licensePlate, this.emissionCategory, this.carType, this.fuelType);
     }

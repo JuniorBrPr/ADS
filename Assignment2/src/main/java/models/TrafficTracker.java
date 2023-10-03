@@ -19,7 +19,6 @@ public class TrafficTracker {
         //  initalize violations with an empty ordered list which sorts items by car and city.
         //  Use your generic implementation class OrderedArrayList
 
-
     }
 
     /**
@@ -71,8 +70,6 @@ public class TrafficTracker {
             // TODO recursively process all files and sub folders from the filesInDirectory list.
             //  also track the total number of offences found
 
-
-
         } else if (file.getName().matches(TRAFFIC_FILE_PATTERN)) {
             // the file is a regular file that matches the target pattern for raw detection files
             // process the content of this file and merge the offences found into this.violations
@@ -98,8 +95,6 @@ public class TrafficTracker {
         // TODO import all detections from the specified file into the newDetections list
         //  using the importItemsFromFile helper method and the Detection.fromLine parser.
 
-
-
         System.out.printf("Imported %d detections from %s.\n", newDetections.size(), file.getPath());
 
         int totalNumberOfOffences = 0; // tracks the number of offences that emerges from the data in this file
@@ -107,9 +102,6 @@ public class TrafficTracker {
         // TODO validate all detections against the purple criteria and
         //  merge any resulting offences into this.violations, accumulating offences per car and per city
         //  also keep track of the totalNumberOfOffences for reporting
-
-
-
 
         return totalNumberOfOffences;
     }
@@ -163,7 +155,6 @@ public class TrafficTracker {
         return null;  // replace this reference
     }
 
-
     /**
      * imports a collection of items from a text file which provides one line for each item
      * @param items         the list to which imported items shall be added
@@ -186,10 +177,7 @@ public class TrafficTracker {
 
             // TODO convert the line to an instance of E
 
-
-
             // TODO add a successfully converted item to the list of items
-
 
         }
 

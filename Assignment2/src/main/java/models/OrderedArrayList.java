@@ -49,9 +49,6 @@ public class OrderedArrayList<E>
     //  (hint: only change nSorted as required to guarantee the representation invariant,
     //   do not invoke a sort or reorder items otherwise differently than is specified by the ArrayList contract)
 
-
-
-
     @Override
     public void sort() {
         if (this.nSorted < this.size()) {
@@ -89,14 +86,10 @@ public class OrderedArrayList<E>
      * @return              the position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
     public int indexOfByIterativeBinarySearch(E searchItem) {
-
         // TODO implement an iterative binary search on the sorted section of the arrayList, 0 <= index < nSorted
         //   to find the position of an item that matches searchItem (this.sortOrder comparator yields a 0 result)
 
-
-
         // TODO if no match was found, attempt a linear search of searchItem in the section nSorted <= index < size()
-
 
         return -1;  // nothing was found ???
     }
@@ -111,19 +104,13 @@ public class OrderedArrayList<E>
      * @return              the position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
     public int indexOfByRecursiveBinarySearch(E searchItem) {
-
         // TODO implement a recursive binary search on the sorted section of the arrayList, 0 <= index < nSorted
         //   to find the position of an item that matches searchItem (this.sortOrder comparator yields a 0 result)
 
-
-
         // TODO if no match was found, attempt a linear search of searchItem in the section nSorted <= index < size()
-
 
         return -1;  // nothing was found ???
     }
-
-
 
     /**
      * finds a match of newItem in the list and applies the merger operator with the newItem to that match
@@ -148,8 +135,6 @@ public class OrderedArrayList<E>
             // TODO retrieve the matched item and
             //  replace the matched item in the list with the merger of the matched item and the newItem
 
-
-
             return false;
         }
     }
@@ -165,8 +150,6 @@ public class OrderedArrayList<E>
 
         // TODO loop over all items and use the mapper
         //  to calculate and accumulate the contribution of each item
-
-
 
         return sum;
     }
