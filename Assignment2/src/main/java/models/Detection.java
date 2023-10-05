@@ -59,11 +59,19 @@ public class Detection {
             String city = parts[1].trim();
             LocalDateTime dateTime = LocalDateTime.parse(parts[2].trim());
 
+            // for (Car car : cars) {
+            // int carIndex = cars.indexOf(car.getLicensePlate());
+            // }
+
+            cars.forEach((car) -> {
+                int carIndex = cars.indexOf(car.getLicensePlate());
+            });
+
             // Search for the car in the list using licensePlate
             int carIndex = -1;
-            for (int i = 0; i < cars.size(); i++) {
-                if (cars.get(i).getLicensePlate().equals(licensePlate)) {
-                    carIndex = i;
+            for (Car car : cars) {
+                if (car.getLicensePlate().equals(licensePlate)) {
+                    carIndex = cars.indexOf(car);
                     break;
                 }
             }
@@ -72,7 +80,7 @@ public class Detection {
             if (carIndex == -1) {
                 Car newCar = new Car(licensePlate);
                 cars.add(newCar);
-                carIndex = cars.size() - 1;
+                carIndex = cars.indexOf(newCar);
             }
 
             // Create a new Detection instance
