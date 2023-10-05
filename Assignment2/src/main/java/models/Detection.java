@@ -96,8 +96,19 @@ public class Detection {
     public Violation validatePurple() {
         // TODO validate that diesel trucks and diesel coaches have an emission category
         // of 6 or above
+        CarType carType = car.getCarType();
+        FuelType fuelType = car.getFuelType();
+        int emissionCategory = car.getEmissionCategory();
 
-        return null;
+        // Check if the car is a diesel truck or a diesel coach
+        if ((carType == CarType.Truck || carType == CarType.Coach) &&
+                fuelType == FuelType.Diesel &&
+                emissionCategory < 6) {
+            // Create and return a Violation instance
+            return new Violation(car, city);
+        }
+
+        return null; // No violation found
     }
 
     public Car getCar() {

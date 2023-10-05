@@ -18,7 +18,6 @@ public class TrafficTracker {
         // TODO initialize cars with an empty ordered list which sorts items by licensePlate.
         //  initalize violations with an empty ordered list which sorts items by car and city.
         //  Use your generic implementation class OrderedArrayList
-
     }
 
     /**
