@@ -59,14 +59,6 @@ public class Detection {
             String city = parts[1].trim();
             LocalDateTime dateTime = LocalDateTime.parse(parts[2].trim());
 
-            // for (Car car : cars) {
-            // int carIndex = cars.indexOf(car.getLicensePlate());
-            // }
-
-            cars.forEach((car) -> {
-                int carIndex = cars.indexOf(car.getLicensePlate());
-            });
-
             // Search for the car in the list using licensePlate
             int carIndex = -1;
             for (Car car : cars) {
