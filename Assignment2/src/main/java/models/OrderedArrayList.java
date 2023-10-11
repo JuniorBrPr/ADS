@@ -73,8 +73,7 @@ public class OrderedArrayList<E>
     @Override
     public int indexOfByBinarySearch(E searchItem) {
         if (searchItem != null) {
-            // some arbitrary choice to use the iterative or the recursive version
-            return indexOfByRecursiveBinarySearch(searchItem);
+            return indexOfByIterativeBinarySearch(searchItem);
         } else {
             return -1;
         }
@@ -129,12 +128,32 @@ public class OrderedArrayList<E>
      * @return the position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
     public int indexOfByRecursiveBinarySearch(E searchItem) {
-        // TODO implement a recursive binary search on the sorted section of the arrayList, 0 <= index < nSorted
-        //   to find the position of an item that matches searchItem (this.sortOrder comparator yields a 0 result)
+        return indexOfByRecursiveBinarySearch(searchItem, 0, this.nSorted - 1);
+    }
 
-        // TODO if no match was found, attempt a linear search of searchItem in the section nSorted <= index < size()
+    private int indexOfByRecursiveBinarySearch(E searchItem, int start, int end) {
+        if (start > end) {
+            for (int i = this.nSorted; i < this.size(); i++) {
+                if (this.get(i).equals(searchItem)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
 
-        return -1;  // nothing was found ???
+        int mid = (start + end) / 2;
+        if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
+            return indexOfByRecursiveBinarySearch(searchItem, start, mid - 1);
+        }
+
+        if (this.sortOrder.compare(this.get(mid), searchItem) < 0) {
+            return indexOfByRecursiveBinarySearch(searchItem, mid + 1, end);
+        }
+
+        if (this.sortOrder.compare(this.get(mid), searchItem) == 0) {
+            return mid;
+        }
+        return -1;
     }
 
     /**
@@ -152,7 +171,7 @@ public class OrderedArrayList<E>
     @Override
     public boolean merge(E newItem, BinaryOperator<E> merger) {
         if (newItem == null) return false;
-        int matchedItemIndex = this.indexOfByRecursiveBinarySearch(newItem);
+        int matchedItemIndex = this.indexOfByRecursiveBinarySearch(newItem, 0, this.nSorted - 1);
 
         if (matchedItemIndex < 0) {
             this.add(newItem);
