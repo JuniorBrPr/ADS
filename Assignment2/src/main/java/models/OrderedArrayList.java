@@ -49,6 +49,10 @@ public class OrderedArrayList<E>
     //  (hint: only change nSorted as required to guarantee the representation invariant,
     //   do not invoke a sort or reorder items otherwise differently than is specified by the ArrayList contract)
 
+//    @Override
+//    public boolean add(E item) {
+//    }
+
     @Override
     public void sort() {
         if (this.nSorted < this.size()) {

@@ -11,13 +11,12 @@ public class TrafficTracker {
     private final String TRAFFIC_FILE_EXTENSION = ".txt";
     private final String TRAFFIC_FILE_PATTERN = ".+\\" + TRAFFIC_FILE_EXTENSION;
 
-    private OrderedList<Car> cars;                  // the reference list of all known Cars registered by the RDW
-    private OrderedList<Violation> violations;      // the accumulation of all offences by car and by city
+    private final OrderedList<Car> cars;                  // the reference list of all known Cars registered by the RDW
+    private final OrderedList<Violation> violations;      // the accumulation of all offences by car and by city
 
     public TrafficTracker() {
-        // TODO initialize cars with an empty ordered list which sorts items by licensePlate.
-        //  initalize violations with an empty ordered list which sorts items by car and city.
-        //  Use your generic implementation class OrderedArrayList
+        this.cars = new OrderedArrayList<>(Car::compareTo);
+        this.violations = new OrderedArrayList<>();
     }
 
     /**

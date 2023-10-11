@@ -43,14 +43,6 @@ public class Detection {
      */
     public static Detection fromLine(String textLine, List<Car> cars) {
         Detection newDetection = null;
-
-        // TODO convert the information in the textLine into a new Detection instance
-        // use the cars.indexOf to find the car that is associated with the licensePlate
-        // of the detection
-        // if no car can be found a new Car shall be instantiated and added to the list
-        // and associated with the detection
-
-        // Split the textLine into its components
         String[] parts = textLine.split(",");
 
         // Check if the textLine contains all the required information
@@ -75,7 +67,6 @@ public class Detection {
                 carIndex = cars.indexOf(newCar);
             }
 
-            // Create a new Detection instance
             newDetection = new Detection(cars.get(carIndex), city, dateTime);
         }
 
@@ -94,17 +85,13 @@ public class Detection {
      *         null if no offence was found.
      */
     public Violation validatePurple() {
-        // TODO validate that diesel trucks and diesel coaches have an emission category
-        // of 6 or above
         CarType carType = car.getCarType();
         FuelType fuelType = car.getFuelType();
         int emissionCategory = car.getEmissionCategory();
 
-        // Check if the car is a diesel truck or a diesel coach
         if ((carType == CarType.Truck || carType == CarType.Coach) &&
                 fuelType == FuelType.Diesel &&
                 emissionCategory < 6) {
-            // Create and return a Violation instance
             return new Violation(car, city);
         }
 
