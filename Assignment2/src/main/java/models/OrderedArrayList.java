@@ -55,13 +55,13 @@ public class OrderedArrayList<E>
     // do not invoke a sort or reorder items otherwise differently than is specified
     // by the ArrayList contract)
 
-    /* @Override
+    @Override
     public void add(int index, E item) {
         super.add(index, item); // Call the super class method to insert the item
         if (index <= nSorted) {
             nSorted++; // Increment nSorted if the item is added in the sorted section
         }
-    } */
+    }
 
     @Override
     public E remove(int index) {
