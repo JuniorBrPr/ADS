@@ -133,27 +133,19 @@ public class OrderedArrayList<E>
         int end = this.nSorted - 1;
 
         while (start <= end) {
-            E mid = this.get((start + end) / 2);
-            if (this.sortOrder.compare(mid, searchItem) > 0) {
-                end = (start + end) / 2 - 1;
+            int mid = (start + end) / 2;
+            if (this.sortOrder.compare(this.get(mid), searchItem) == 0){
+                return mid;
             }
-
-            if (this.sortOrder.compare(mid, searchItem) == 0) {
-                return (start + end) / 2;
+            if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
+                end = mid - 1;
             }
-
-            if (this.sortOrder.compare(mid, searchItem) < 0) {
-                start = (start + end) / 2 + 1;
+            if (this.sortOrder.compare(this.get(mid), searchItem) < 0) {
+                start = mid + 1;
             }
         }
 
-        for (int i = this.nSorted; i < this.size(); i++) {
-            if (this.get(i).equals(searchItem)) {
-                return i;
-            }
-        }
-
-        return -1;
+        return super.indexOf(searchItem);
     }
 
     /**
@@ -229,10 +221,7 @@ public class OrderedArrayList<E>
             this.add(newItem);
             return true;
         } else {
-            // TODO retrieve the matched item and
-            // replace the matched item in the list with the merger of the matched item and
-            // the newItem
-
+            this.set(matchedItemIndex, merger.apply(this.get(matchedItemIndex), newItem));
             return false;
         }
     }
@@ -246,10 +235,9 @@ public class OrderedArrayList<E>
     @Override
     public double aggregate(Function<E, Double> mapper) {
         double sum = 0.0;
-
-        // TODO loop over all items and use the mapper
-        // to calculate and accumulate the contribution of each item
-
+        for (E e : this) {
+            sum += mapper.apply(e);
+        }
         return sum;
     }
 }

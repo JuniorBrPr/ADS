@@ -23,16 +23,15 @@ public class TrafficTracker {
      * imports all registered cars from a resource file that has been provided by
      * the RDW
      * 
-     * @param resourceName
+     * @param resourceName the name of the resource file
      */
     public void importCarsFromVault(String resourceName) {
         this.cars.clear();
 
         // load all cars from the text file
         int numberOfLines = importItemsFromFile(this.cars,
-                createFileFromURL(TrafficTracker.class.getResource(resourceName)),
+                createFileFromURL(Objects.requireNonNull(TrafficTracker.class.getResource(resourceName))),
                 Car::fromLine);
-
         // sort the cars for efficient later retrieval
         this.cars.sort();
 
@@ -44,13 +43,13 @@ public class TrafficTracker {
      * from the hierarchical file structure of the vault
      * accumulates any offences against purple rules into this.violations
      * 
-     * @param resourceName
+     * @param resourceName the name of the resource file
      */
     public void importDetectionsFromVault(String resourceName) {
         this.violations.clear();
 
         int totalNumberOfOffences = this.mergeDetectionsFromVaultRecursively(
-                createFileFromURL(TrafficTracker.class.getResource(resourceName)));
+                createFileFromURL(Objects.requireNonNull(TrafficTracker.class.getResource(resourceName))));
 
         System.out.printf("Found %d offences among detections imported from files in %s.\n",
                 totalNumberOfOffences, resourceName);
@@ -60,7 +59,7 @@ public class TrafficTracker {
      * traverses the detections vault recursively and processes every data file that
      * it finds
      * 
-     * @param file
+     * @param file the file or folder to be processed
      */
     private int mergeDetectionsFromVaultRecursively(File file) {
         int totalNumberOfOffences = 0;
@@ -91,7 +90,7 @@ public class TrafficTracker {
      * imports another batch detection data from the filePath text file
      * and merges the offences into the earlier imported and accumulated violations
      * 
-     * @param file
+     * @param file the file to be processed
      */
     private int mergeDetectionsFromFile(File file) {
         // Re-sort the accumulated violations for efficient searching and merging
@@ -124,7 +123,6 @@ public class TrafficTracker {
                 } else {
                     // If the violation does not exist, add it to this.violations and to this.cars
                     this.violations.add(violation);
-                    this.cars.add(violation.getCar());
                 }
 
                 totalNumberOfOffences++;
@@ -163,14 +161,7 @@ public class TrafficTracker {
      * @return a list of topNum items that provides the top aggregated violations
      */
     public List<Violation> topViolationsByCar(int topNumber) {
-
-        // TODO merge all violations from this.violations into a new OrderedArrayList
-        // which orders and aggregates violations by city
-        // TODO sort the new list by decreasing offencesCount.
-        // TODO use .subList to return only the topNumber of violations from the sorted
-        // list
-        // (You may want to prepare/reuse a local private method for all this)
-
+        //TODO
         return null; // replace this reference
     }
 
@@ -189,8 +180,7 @@ public class TrafficTracker {
         // TODO sort the new list by decreasing offencesCount.
         // TODO use .subList to return only the topNumber of violations from the sorted
         // list
-        // (You may want to prepare/reuse a local private method for all this)
-
+        // (You may want to prepare/reuse a local private method for all this
         return null; // replace this reference
     }
 
@@ -223,16 +213,15 @@ public class TrafficTracker {
             }
         }
 
-        // System.out.printf("Imported %d lines from %s.\n", numberOfLines,
-        // file.getPath());
+//         System.out.printf("Imported %d lines from %s.\n", numberOfLines, file.getPath());
         return numberOfLines;
     }
 
     /**
      * helper method to create a scanner on a file and handle the exception
      * 
-     * @param file
-     * @return
+     * @param file the file to be scanned
+     * @return a scanner on the file
      */
     private static Scanner createFileScanner(File file) {
         try {
