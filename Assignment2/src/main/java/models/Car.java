@@ -2,7 +2,17 @@ package models;
 
 import java.time.LocalDate;
 
+/**
+ * Represents a car with its license plate, emission category, car type, fuel type and date of admission.
+ * Uniquely identified by its license plate.
+ */
 public class Car implements Comparable<Car> {
+
+    private final String licensePlate;
+    private int emissionCategory;
+    private CarType carType;
+    private FuelType fuelType;
+    private LocalDate dateOfAdmission;
 
     public enum CarType {
         Unknown,
@@ -11,6 +21,7 @@ public class Car implements Comparable<Car> {
         Truck,
         Coach
     }
+
     public enum FuelType {
         Unknown,
         Gasoline,
@@ -19,14 +30,7 @@ public class Car implements Comparable<Car> {
         Electric
     }
 
-    private final String licensePlate;      // defines the car uniquely
-    private int emissionCategory;           // a number between 0 and 9, higher is cleaner, depends on type, fuel and age, typically.
-    private CarType carType;
-    private FuelType fuelType;
-    private LocalDate dateOfAdmission;      // date of registration of the car at RDW
-
     public Car(String licensePlate) {
-        // base constructor for unregistered and foreign cars
         this.licensePlate = licensePlate;
         this.emissionCategory = 0;
         this.carType = CarType.Unknown;
@@ -34,7 +38,8 @@ public class Car implements Comparable<Car> {
         this.dateOfAdmission = LocalDate.EPOCH;
     }
 
-    public Car(String licensePlate, int emissionCategory, CarType carType, FuelType fuelType, LocalDate dateOfAdmission) {
+    public Car(String licensePlate, int emissionCategory,
+               CarType carType, FuelType fuelType, LocalDate dateOfAdmission) {
         this(licensePlate);
         this.emissionCategory = emissionCategory;
         this.carType = carType;
@@ -43,21 +48,20 @@ public class Car implements Comparable<Car> {
     }
 
     /**
-     * parses car information from a textLine
-     * with format: licensePlate, emissionCategory, carType, fuelType, dateOfAdmission
-     * should ignore leading and trailing whitespaces in each field
-     * @param textLine
-     * @return  a new Car instance with the provided information
-     *          or null if the textLine is corrupt, incomplete or empty
+     * Creates a new Car instance from a text line
+     * The text line should be in the format: licensePlate, emissionCategory, carType, fuelType, dateOfAdmission
+     * The fields should be separated by commas
+     * Throws an exception if the fields cannot be parsed
+     *
+     * @param textLine the text line to parse
+     * @return a new Car instance with the provided information or null if the textLine is corrupt or incomplete
      */
     public static Car fromLine(String textLine) {
         Car newCar = null;
 
-        // extract the comma-separated fields from the textLine
         String[] fields = textLine.split(",");
         if (fields.length >= 5) {
             try {
-                // parse the fields and instantiate a new car
                 newCar = new Car(
                         fields[0].trim(),
                         Integer.parseInt(fields[1].trim()),
@@ -66,7 +70,6 @@ public class Car implements Comparable<Car> {
                         LocalDate.parse(fields[4].trim())
                 );
             } catch (Exception e) {
-                // any of the parse and valueOf methods could throw an exception on a format mismatch
                 System.out.printf("Could not parse Car specification in text line '%s'\n", textLine);
                 System.out.println(e.getMessage());
             }
@@ -83,37 +86,16 @@ public class Car implements Comparable<Car> {
         return emissionCategory;
     }
 
-    public void setEmissionCategory(int emissionCategory) {
-        this.emissionCategory = emissionCategory;
-    }
-
     public CarType getCarType() {
         return carType;
-    }
-
-    public void setCarType(CarType carType) {
-        this.carType = carType;
     }
 
     public FuelType getFuelType() {
         return fuelType;
     }
 
-    public void setFuelType(FuelType fuelType) {
-        this.fuelType = fuelType;
-    }
-
-    public void setDateOfAdmission(LocalDate dateOfAdmission) {
-        this.dateOfAdmission = dateOfAdmission;
-    }
-
-    public LocalDate getDateOfAdmission() {
-        return dateOfAdmission;
-    }
-
     @Override
     public int compareTo(Car other) {
-        // cars are uniquely defined by their license plate
         return this.licensePlate.compareTo(other.licensePlate);
     }
 
@@ -123,6 +105,12 @@ public class Car implements Comparable<Car> {
                 this.licensePlate, this.emissionCategory, this.carType, this.fuelType);
     }
 
+    /**
+     * Two cars are considered equal if they have the same license plate
+     *
+     * @param o the other car to compare with
+     * @return true if the cars are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -131,6 +119,12 @@ public class Car implements Comparable<Car> {
         return licensePlate.equals(car.licensePlate);
     }
 
+
+    /**
+     * Two cars are considered equal if they have the same license plate
+     *
+     * @return the hash code of the license plate
+     */
     @Override
     public int hashCode() {
         return licensePlate.hashCode();

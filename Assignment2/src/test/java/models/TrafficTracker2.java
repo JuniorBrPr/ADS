@@ -53,9 +53,9 @@ public class TrafficTracker2 {
             assertTrue(violations.get(i).getOffencesCount() >= violations.get(i + 1).getOffencesCount());
         }
 
-        // Check if the cities have been removed
+        // Check if the car attribute of the violations is null
         for (Violation violation : violations) {
-            assertNull(violation.getCity());
+            assertNull(violation.getCar());
         }
     }
 }

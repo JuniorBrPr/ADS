@@ -20,11 +20,13 @@ public class TrafficControlMain {
         trafficTracker.importCarsFromVault(VAULT_NAME + "/cars.txt");
         System.out.print("Imported cars:\n[");
         List<Car> cars = trafficTracker.getCars().subList(0, Integer.min(10, trafficTracker.getCars().size()));
+
         int count = 0;
+        // print the first 10 cars in the list of cars (or all cars if there are less than 10)
         for (int i = 0; i < cars.size(); i++) {
             count++;
             System.out.printf("%s%s", cars.get(i), i < cars.size() - 1 ? ", " : "]...\n");
-            if (count == 2) {
+            if (count == 2) { // if there are more than 2 cars, print a newline after every 2 cars
                 System.out.println();
                 count = 0;
             }
@@ -36,10 +38,12 @@ public class TrafficControlMain {
         System.out.print("Aggregated offending detections:\n[");
         List<Violation> violations = trafficTracker.getViolations()
                 .subList(0, Integer.min(10, trafficTracker.getViolations().size()));
+
+        // print the first 10 violations in the list of violations (or all violations if there are less than 10)
         for (int i = 0; i < violations.size(); i++) {
             count++;
             System.out.printf("%s%s", violations.get(i), i < violations.size() - 1 ? ", " : "]...\n\n");
-            if (count == 4) {
+            if (count == 4) { // if there are more than 4 violations, print a newline after every 4 violations
                 System.out.println();
                 count = 0;
             }

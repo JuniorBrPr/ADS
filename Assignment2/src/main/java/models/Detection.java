@@ -1,21 +1,20 @@
 package models;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static models.Car.CarType;
 import static models.Car.FuelType;
 
+/**
+ * Represents a detection of a car that has entered an environmentally restricted zone
+ * at a certain date and time.
+ * A detection is associated with a car , a city and a date and time.
+ */
 public class Detection {
-    private final Car car; // the car that was detected
-    private final String city; // the name of the city where the detector was located
-    private final LocalDateTime dateTime; // date and time of the detection event
-
-    /*
-     * Representation Invariant:
-     * every Detection shall be associated with a valid Car
-     */
+    private final Car car;
+    private final String city;
+    private final LocalDateTime dateTime;
 
     public Detection(Car car, String city, LocalDateTime dateTime) {
         this.car = car;
@@ -24,22 +23,17 @@ public class Detection {
     }
 
     /**
-     * Parses detection information from a line of text about a car that has entered
-     * an environmentally controlled zone
+     * Parses detection information from a line of text about a car that has entered an environmentally controlled zone
      * of a specified city.
-     * the format of the text line is: lisensePlate, city, dateTime
-     * The licensePlate shall be matched with a car from the provided list.
-     * If no matching car can be found, a new Car shall be instantiated with the
-     * given lisensePlate and added to the list
-     * (besides the license plate number there will be no other information
-     * available about this car)
-     * 
-     * @param textLine
-     * @param cars     a list of known cars, ordered and searchable by licensePlate
-     *                 (i.e. the indexOf method of the list shall only consider the
-     *                 lisensePlate when comparing cars)
-     * @return a new Detection instance with the provided information
-     *         or null if the textLine is corrupt or incomplete
+     * The format of the text line is: licensePlate, city, dateTimeThe licensePlate shall be
+     * matched with a car from the provided list. If no matching car can be found, a new Car shall be instantiated with
+     * the given licensePlate and added to the list(besides the license plate number there will be no other information
+     * available about this car).
+     *
+     * @param textLine The text line to parse.
+     * @param cars     A list of known cars, ordered and searchable by licensePlate (i.e. the indexOf method of the list
+     *                 shall only consider the licensePlate when comparing cars).
+     * @return A new Detection instance with the provided information or null if the textLine is corrupt or incomplete
      */
     public static Detection fromLine(String textLine, List<Car> cars) {
         Detection newDetection = null;
@@ -79,10 +73,10 @@ public class Detection {
      * I.e.:
      * Diesel trucks and diesel coaches with an emission category of below 6 may not
      * enter a purple zone
-     * 
+     *
      * @return a Violation instance if the detection saw an offence against the
-     *         purple zone rule/
-     *         null if no offence was found.
+     * purple zone rule/
+     * null if no offence was found.
      */
     public Violation validatePurple() {
         CarType carType = car.getCarType();
@@ -95,7 +89,7 @@ public class Detection {
             return new Violation(car, city);
         }
 
-        return null; // No violation found
+        return null;
     }
 
     public Car getCar() {
