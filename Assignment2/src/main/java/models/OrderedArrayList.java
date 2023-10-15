@@ -45,21 +45,16 @@ public class OrderedArrayList<E>
         this.nSorted = this.size();
     }
 
-    // TODO override the ArrayList.add(index, item), ArrayList.remove(index) and
-    // Collection.remove(object) methods
-    // such that they both meet the ArrayList contract of these methods (see
-    // ArrayList JavaDoc)
-    // and sustain the representation invariant of OrderedArrayList
-    // (hint: only change nSorted as required to guarantee the representation
-    // invariant,
-    // do not invoke a sort or reorder items otherwise differently than is specified
-    // by the ArrayList contract)
-
     @Override
     public void add(int index, E item) {
-        super.add(index, item); // Call the super class method to insert the item
-        if (index <= nSorted) {
-            nSorted++; // Increment nSorted if the item is added in the sorted section
+        System.out.println("Adding " + item + " at index " + index);
+        super.add(index, item);
+        for (int i = 0; i < this.size(); i++) {
+            System.out.println(i +" : " + this.get(i));
+        }
+
+        if (index < nSorted - 1) {
+            nSorted = index;
         }
     }
 
@@ -94,22 +89,12 @@ public class OrderedArrayList<E>
 
     @Override
     public int indexOf(Object item) {
-        // efficient search can be done only if you have provided an sortOrder for the
-        // list
-        if (this.getSortOrder() != null) {
-            return indexOfByIterativeBinarySearch((E) item);
-        } else {
-            return super.indexOf(item);
-        }
+        return this.indexOfByBinarySearch((E) item);
     }
 
     @Override
     public int indexOfByBinarySearch(E searchItem) {
-        if (searchItem != null) {
-            return indexOfByIterativeBinarySearch(searchItem);
-        } else {
-            return -1;
-        }
+        return indexOfByIterativeBinarySearch(searchItem);
     }
 
     /**
@@ -126,7 +111,7 @@ public class OrderedArrayList<E>
      * @param searchItem the item to be searched on the basis of comparison by
      *                   this.sortOrder
      * @return the position index of the found item in the arrayList, or -1 if no
-     *         item matches the search item.
+     * item matches the search item.
      */
     public int indexOfByIterativeBinarySearch(E searchItem) {
         int start = 0;
@@ -145,7 +130,16 @@ public class OrderedArrayList<E>
             }
         }
 
-        return super.indexOf(searchItem);
+        return indexByLinearSearch(searchItem, this.nSorted, this.size() - 1);
+    }
+
+    public int indexByLinearSearch(E searchItem, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            if (this.get(i).equals(searchItem)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -169,16 +163,12 @@ public class OrderedArrayList<E>
     }
 
     private int indexOfByRecursiveBinarySearch(E searchItem, int start, int end) {
-        if (start > end) {
-            for (int i = this.nSorted; i < this.size(); i++) {
-                if (this.get(i).equals(searchItem)) {
-                    return i;
-                }
-            }
-            return -1;
+        int mid = (start + end) / 2;
+
+        if (this.sortOrder.compare(this.get(mid), searchItem) == 0) {
+            return mid;
         }
 
-        int mid = (start + end) / 2;
         if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
             return indexOfByRecursiveBinarySearch(searchItem, start, mid - 1);
         }
@@ -187,11 +177,7 @@ public class OrderedArrayList<E>
             return indexOfByRecursiveBinarySearch(searchItem, mid + 1, end);
         }
 
-        if (this.sortOrder.compare(this.get(mid), searchItem) == 0) {
-            return mid;
-        }
-
-        return -1;
+        return indexByLinearSearch(searchItem, this.nSorted, this.size() - 1);
     }
 
     /**
@@ -201,7 +187,7 @@ public class OrderedArrayList<E>
      * match and the newItem
      * If no match is found in the list, the newItem is added to the list.
      *
-     * @param newItem
+     * @param newItem the item to be merged into the list
      * @param merger  a function that takes two items and returns an item that
      *                contains the merged content of
      *                the two items according to some merging rule.
@@ -215,7 +201,7 @@ public class OrderedArrayList<E>
     public boolean merge(E newItem, BinaryOperator<E> merger) {
         if (newItem == null)
             return false;
-        int matchedItemIndex = this.indexOfByRecursiveBinarySearch(newItem, 0, this.nSorted - 1);
+        int matchedItemIndex = this.indexOfByIterativeBinarySearch(newItem);
 
         if (matchedItemIndex < 0) {
             this.add(newItem);
