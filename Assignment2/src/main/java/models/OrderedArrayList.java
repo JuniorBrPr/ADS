@@ -47,13 +47,8 @@ public class OrderedArrayList<E>
 
     @Override
     public void add(int index, E item) {
-        System.out.println("Adding " + item + " at index " + index);
         super.add(index, item);
-        for (int i = 0; i < this.size(); i++) {
-            System.out.println(i +" : " + this.get(i));
-        }
-
-        if (index < nSorted - 1) {
+        if (index < nSorted) {
             nSorted = index;
         }
     }
@@ -116,17 +111,16 @@ public class OrderedArrayList<E>
     public int indexOfByIterativeBinarySearch(E searchItem) {
         int start = 0;
         int end = this.nSorted - 1;
-
         while (start <= end) {
-            int mid = (start + end) / 2;
+            int mid = start + ((end - start) / 2);
             if (this.sortOrder.compare(this.get(mid), searchItem) == 0){
                 return mid;
             }
-            if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
-                end = mid - 1;
-            }
             if (this.sortOrder.compare(this.get(mid), searchItem) < 0) {
                 start = mid + 1;
+            }
+            if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
+                end = mid - 1;
             }
         }
 
@@ -159,25 +153,24 @@ public class OrderedArrayList<E>
      *         item matches the search item.
      */
     public int indexOfByRecursiveBinarySearch(E searchItem) {
-        return indexOfByRecursiveBinarySearch(searchItem, 0, this.nSorted - 1);
+        return RecursiveBinarySearch(searchItem, 0, this.nSorted - 1);
     }
 
-    private int indexOfByRecursiveBinarySearch(E searchItem, int start, int end) {
-        int mid = (start + end) / 2;
-
+    private int RecursiveBinarySearch(E searchItem, int start, int end) {
+        if (start > end) {
+            return indexByLinearSearch(searchItem, this.nSorted, this.size() - 1);
+        }
+        int mid = start + ((end - start) / 2);
         if (this.sortOrder.compare(this.get(mid), searchItem) == 0) {
             return mid;
         }
-
-        if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
-            return indexOfByRecursiveBinarySearch(searchItem, start, mid - 1);
-        }
-
         if (this.sortOrder.compare(this.get(mid), searchItem) < 0) {
-            return indexOfByRecursiveBinarySearch(searchItem, mid + 1, end);
+            return RecursiveBinarySearch(searchItem, mid + 1, end);
         }
-
-        return indexByLinearSearch(searchItem, this.nSorted, this.size() - 1);
+        if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
+            return RecursiveBinarySearch(searchItem, start, mid - 1);
+        }
+        return -1;
     }
 
     /**
