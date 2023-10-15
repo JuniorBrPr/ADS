@@ -93,13 +93,18 @@ public class TrafficTracker {
 
         // Import all detections from the specified file into the newDetections list
         importItemsFromFile(newDetections, file, s -> Detection.fromLine(s, cars));
-        System.out.printf("Imported %d detections from %s.\n", newDetections.size(), file.getPath());
 
-        int totalNumberOfOffences = 0; // Tracks the number of offences that emerge from the data in this file
+        System.out.printf("Imported %d detections from ...%s.\n",
+                newDetections.size(), file.getPath().split("classes")[1].replace("\\", "/"));
+        return getTotalNumberOfOffences(newDetections);
+    }
 
-        // Validate all detections against the purple criteria and
-        // merge any resulting offences into this.violations, accumulating offences per
-        // car and per city
+    // Tracks the number of offences that emerge from the data in this file
+    // Validate all detections against the purple criteria and
+    // merge any resulting offences into this.violations, accumulating offences per
+    // car and per city
+    private int getTotalNumberOfOffences(List<Detection> newDetections) {
+        int totalNumberOfOffences = 0;
         for (Detection newDetection : newDetections) {
             Violation violation = newDetection.validatePurple();
             if (violation != null) {
@@ -120,7 +125,6 @@ public class TrafficTracker {
                 totalNumberOfOffences++;
             }
         }
-
         return totalNumberOfOffences;
     }
 

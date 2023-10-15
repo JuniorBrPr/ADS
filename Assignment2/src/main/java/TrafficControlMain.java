@@ -10,7 +10,8 @@ public class TrafficControlMain {
 //    private final static String VAULT_NAME = "/test1";
 
     public static void main(String[] args) {
-        Locale.setDefault(Locale.ENGLISH);
+        // set the default locale to Germany to ensure that the decimal separator is a comma
+        Locale.setDefault(Locale.GERMANY);
         System.out.println("Welcome to the HvA Traffic Control processor\n");
 
         TrafficTracker trafficTracker = new TrafficTracker();
@@ -32,7 +33,7 @@ public class TrafficControlMain {
 
         // import and process all detections at the city entry points of environmental zones from the data vault
         trafficTracker.importDetectionsFromVault(VAULT_NAME + "/detections");
-        System.out.println("Aggregated offending detections:");
+        System.out.print("Aggregated offending detections:\n[");
         List<Violation> violations = trafficTracker.getViolations()
                 .subList(0, Integer.min(10, trafficTracker.getViolations().size()));
         for (int i = 0; i < violations.size(); i++) {
