@@ -12,13 +12,16 @@ public class Violation {
     }
 
     public static int compareByLicensePlateAndCity(Violation v1, Violation v2) {
-        // TODO compute the sort order of v1 vs v2 as per conventions of Comparator<Violation>
         int result = v1.car.getLicensePlate().compareTo(v2.car.getLicensePlate());
         if (result == 0) {
             return v1.city.compareTo(v2.city);
         } else {
-            return result; // Don't know yet if this works
+            return result;
         }
+    }
+
+    public static int compareByOffencesCount(Violation v1, Violation v2) {
+        return v2.offencesCount - v1.offencesCount;
     }
 
     /**
@@ -26,7 +29,7 @@ public class Violation {
      * nullifying identifying attributes car and/or city that do not match
      * identifying attributes that match are retained in the result.
      * This method can be used for aggregating violations applying different grouping criteria
-     * @param other
+     * @param other the other violation to aggregate with this one
      * @return  a new violation with the accumulated offencesCount and matching identifying attributes.
      */
     public Violation combineOffencesCounts(Violation other) {
@@ -58,9 +61,11 @@ public class Violation {
         this.offencesCount = offencesCount;
     }
 
-    // TODO represent the violation in the format: licensePlate/city/offencesCount
     @Override
     public String toString() {
-        return car.getLicensePlate() + "/" + city + "/" + offencesCount;
+        return String.format("%s/%s/%d",
+                car == null ? "null" : car.getLicensePlate(),
+                city == null ? "null" : city,
+                offencesCount);
     }
 }

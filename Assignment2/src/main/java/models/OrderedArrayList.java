@@ -5,18 +5,9 @@ import java.util.Comparator;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
-public class OrderedArrayList<E>
-        extends ArrayList<E>
-        implements OrderedList<E> {
-
+public class OrderedArrayList<E> extends ArrayList<E> implements OrderedList<E> {
     protected Comparator<? super E> sortOrder; // the comparator that has been used with the latest sort
     protected int nSorted; // the number of sorted items in the first section of the list
-    // representation-invariant
-    // all items at index positions 0 <= index < nSorted have been ordered by the
-    // given sortOrder comparator
-    // other items at index position nSorted <= index < size() can be in any order
-    // amongst themselves
-    // and also relative to the sorted section
 
     public OrderedArrayList() {
         this(null);
@@ -28,21 +19,10 @@ public class OrderedArrayList<E>
         this.nSorted = 0;
     }
 
-    public Comparator<? super E> getSortOrder() {
-        return this.sortOrder;
-    }
-
     @Override
     public void clear() {
         super.clear();
         this.nSorted = 0;
-    }
-
-    @Override
-    public void sort(Comparator<? super E> c) {
-        super.sort(c);
-        this.sortOrder = c;
-        this.nSorted = this.size();
     }
 
     @Override
@@ -62,34 +42,26 @@ public class OrderedArrayList<E>
         return removedItem;
     }
 
+    public Comparator<? super E> getSortOrder() {
+        return this.sortOrder;
+    }
+
     @Override
-    public boolean remove(Object obj) {
-        int index = super.indexOf(obj); // Find the index of the object using the super class method
+    public boolean remove(Object item) {
+        int index = super.indexOf(item);
         if (index >= 0) {
-            super.remove(index); // Remove the object
+            super.remove(index);
             if (index < nSorted) {
                 nSorted--; // Decrement nSorted if the removed object was in the sorted section
             }
             return true;
         }
-        return false; // Object not found
-    }
-
-    @Override
-    public void sort() {
-        if (this.nSorted < this.size()) {
-            this.sort(this.sortOrder);
-        }
+        return false;
     }
 
     @Override
     public int indexOf(Object item) {
         return this.indexOfByBinarySearch((E) item);
-    }
-
-    @Override
-    public int indexOfByBinarySearch(E searchItem) {
-        return indexOfByIterativeBinarySearch(searchItem);
     }
 
     /**
@@ -113,7 +85,7 @@ public class OrderedArrayList<E>
         int end = this.nSorted - 1;
         while (start <= end) {
             int mid = start + ((end - start) / 2);
-            if (this.sortOrder.compare(this.get(mid), searchItem) == 0){
+            if (this.sortOrder.compare(this.get(mid), searchItem) == 0) {
                 return mid;
             }
             if (this.sortOrder.compare(this.get(mid), searchItem) < 0) {
@@ -125,15 +97,6 @@ public class OrderedArrayList<E>
         }
 
         return indexByLinearSearch(searchItem, this.nSorted, this.size() - 1);
-    }
-
-    public int indexByLinearSearch(E searchItem, int start, int end) {
-        for (int i = start; i <= end; i++) {
-            if (this.get(i).equals(searchItem)) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     /**
@@ -150,7 +113,7 @@ public class OrderedArrayList<E>
      * @param searchItem the item to be searched on the basis of comparison by
      *                   this.sortOrder
      * @return the position index of the found item in the arrayList, or -1 if no
-     *         item matches the search item.
+     * item matches the search item.
      */
     public int indexOfByRecursiveBinarySearch(E searchItem) {
         return RecursiveBinarySearch(searchItem, 0, this.nSorted - 1);
@@ -171,6 +134,34 @@ public class OrderedArrayList<E>
             return RecursiveBinarySearch(searchItem, start, mid - 1);
         }
         return -1;
+    }
+
+    private int indexByLinearSearch(E searchItem, int start, int end) {
+        for (int i = start; i <= end; i++) {
+            if (this.get(i).equals(searchItem)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public void sort(Comparator<? super E> c) {
+        super.sort(c);
+        this.sortOrder = c;
+        this.nSorted = this.size();
+    }
+
+    @Override
+    public void sort() {
+        if (this.nSorted < this.size()) {
+            this.sort(this.sortOrder);
+        }
+    }
+
+    @Override
+    public int indexOfByBinarySearch(E searchItem) {
+        return indexOfByIterativeBinarySearch(searchItem);
     }
 
     /**
