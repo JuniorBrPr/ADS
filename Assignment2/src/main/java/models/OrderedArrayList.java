@@ -155,7 +155,7 @@ public class OrderedArrayList<E> extends ArrayList<E> implements OrderedList<E> 
      * item matches the search item.
      */
     public int indexOfByRecursiveBinarySearch(E searchItem) {
-        return RecursiveBinarySearch(searchItem, 0, this.nSorted - 1); // Search the sorted section
+        return recursiveBinarySearch(searchItem, 0, this.nSorted - 1); // Search the sorted section
     }
 
     /**
@@ -166,7 +166,7 @@ public class OrderedArrayList<E> extends ArrayList<E> implements OrderedList<E> 
      * @param end        The end index of the sorted section.
      * @return The position index of the found item in the arrayList, or -1 if no item matches the search item.
      */
-    private int RecursiveBinarySearch(E searchItem, int start, int end) {
+    private int recursiveBinarySearch(E searchItem, int start, int end) {
         if (start > end) {
             return indexByLinearSearch(searchItem, this.nSorted, this.size() - 1);
         }
@@ -175,10 +175,10 @@ public class OrderedArrayList<E> extends ArrayList<E> implements OrderedList<E> 
             return mid;
         }
         if (this.sortOrder.compare(this.get(mid), searchItem) < 0) {
-            return RecursiveBinarySearch(searchItem, mid + 1, end);
+            return recursiveBinarySearch(searchItem, mid + 1, end);
         }
         if (this.sortOrder.compare(this.get(mid), searchItem) > 0) {
-            return RecursiveBinarySearch(searchItem, start, mid - 1);
+            return recursiveBinarySearch(searchItem, start, mid - 1);
         }
         return -1;
     }
