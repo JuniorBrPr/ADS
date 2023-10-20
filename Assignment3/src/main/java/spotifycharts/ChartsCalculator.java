@@ -16,7 +16,6 @@ public class ChartsCalculator {
         SongBuilder.reSeed(randomizer.nextLong());
     }
 
-
     /**
      * Prepares test data for a number of songs.
      * Semi-random, per country streams counts are associated with each song.
@@ -34,6 +33,7 @@ public class ChartsCalculator {
             // prepares semi-random per-country steams counts
             obtainStreamCounts(song);
         }
+
         return songs;
     }
 

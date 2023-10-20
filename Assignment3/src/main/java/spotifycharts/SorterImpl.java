@@ -17,9 +17,6 @@ public class SorterImpl<E> implements Sorter<E> {
     public List<E> selInsBubSort(List<E> items, Comparator<E> comparator) {
         // TODO implement selection sort or insertion sort or bubble sort
 
-
-
-
         return items;   // replace as you find appropriate
     }
 
@@ -34,8 +31,6 @@ public class SorterImpl<E> implements Sorter<E> {
     public List<E> quickSort(List<E> items, Comparator<E> comparator) {
         // TODO provide a recursive quickSort implementation,
         //  that is different from the example given in the lecture
-
-
 
         return items;   // replace as you find appropriate
     }
@@ -53,7 +48,6 @@ public class SorterImpl<E> implements Sorter<E> {
      *                      all other items >= any item in the lead collection
      */
     public List<E> topsHeapSort(int numTops, List<E> items, Comparator<E> comparator) {
-
         // the lead collection of numTops items will be organised into a (zero-based) heap structure
         // in the first numTops list positions using the reverseComparator for the heap condition.
         // that way the root of the heap will contain the worst item of the lead collection
@@ -94,13 +88,8 @@ public class SorterImpl<E> implements Sorter<E> {
             // TODO swap item[0] and item[i];
             //  this moves item[0] to its designated position
 
-
-
             // TODO the new root may have violated the heap condition
             //  repair the heap condition on the remaining heap of size i
-
-
-
         }
 
         return items;
@@ -119,10 +108,8 @@ public class SorterImpl<E> implements Sorter<E> {
     protected void heapSwim(List<E> items, int heapSize, Comparator<E> comparator) {
         // TODO swim items[heapSize-1] up the heap until
         //      i==0 || items[(i-1]/2] <= items[i]
-
-
-
     }
+
     /**
      * Repairs the zero-based heap condition for its root items[0] on the basis of the comparator
      * all items[1..heapSize-1] are assumed to satisfy the heap condition
@@ -136,8 +123,5 @@ public class SorterImpl<E> implements Sorter<E> {
     protected void heapSink(List<E> items, int heapSize, Comparator<E> comparator) {
         // TODO sink items[0] down the heap until
         //      2*i+1>=heapSize || (items[i] <= items[2*i+1] && items[i] <= items[2*i+2])
-
-
-
     }
 }
