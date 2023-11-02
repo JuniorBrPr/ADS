@@ -1,7 +1,6 @@
 package spotifycharts;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 public class SorterImpl<E> implements Sorter<E> {
@@ -16,8 +15,21 @@ public class SorterImpl<E> implements Sorter<E> {
      */
     public List<E> selInsBubSort(List<E> items, Comparator<E> comparator) {
         // TODO implement selection sort or insertion sort or bubble sort
+        for (int i = 0; i < items.size() - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < items.size(); j++) {
+                if (comparator.compare(items.get(j), items.get(minIndex)) < 0) {
+                    minIndex = j;
+                }
+            }
+            if (minIndex != i) {
+                E temp = items.get(i);
+                items.set(i, items.get(minIndex));
+                items.set(minIndex, temp);
+            }
+        }
 
-        return items;   // replace as you find appropriate
+        return items;
     }
 
     /**
@@ -31,8 +43,42 @@ public class SorterImpl<E> implements Sorter<E> {
     public List<E> quickSort(List<E> items, Comparator<E> comparator) {
         // TODO provide a recursive quickSort implementation,
         //  that is different from the example given in the lecture
+        if (items == null || items.size() <= 1 ) {
+            return items;
+        }
 
-        return items;   // replace as you find appropriate
+        recursiveQuickSort(items, 0, items.size() - 1, comparator);
+
+        return items;
+    }
+
+    private void recursiveQuickSort(List<E> items, int startIndex, int lastIndex, Comparator<E> comparator) {
+        if (startIndex < lastIndex) {
+            int middleIndex = partition(items, startIndex, lastIndex, comparator);
+            recursiveQuickSort(items, startIndex, middleIndex - 1, comparator);
+            recursiveQuickSort(items, middleIndex + 1, lastIndex, comparator);
+        }
+    }
+
+    private int partition(List<E> items, int low, int high, Comparator<E> comparator) {
+        E middle = items.get(high);
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            if (comparator.compare(items.get(j), middle) <= 0 ) {
+                i++;
+                swap(items, i, j);
+            }
+        }
+
+        swap(items, i + 1, high);
+        return i + 1;
+    }
+
+    private void swap(List<E> items, int i, int j) {
+        E temp = items.get(i);
+        items.set(i, items.get(j));
+        items.set(j, temp);
     }
 
     /**
@@ -87,9 +133,11 @@ public class SorterImpl<E> implements Sorter<E> {
 
             // TODO swap item[0] and item[i];
             //  this moves item[0] to its designated position
+            swap(items, 0, i);
 
             // TODO the new root may have violated the heap condition
             //  repair the heap condition on the remaining heap of size i
+            heapSink(items, i, reverseComparator);
         }
 
         return items;
@@ -108,6 +156,18 @@ public class SorterImpl<E> implements Sorter<E> {
     protected void heapSwim(List<E> items, int heapSize, Comparator<E> comparator) {
         // TODO swim items[heapSize-1] up the heap until
         //      i==0 || items[(i-1]/2] <= items[i]
+        int childIndex = heapSize - 1;
+
+        while (childIndex > 0) {
+            int parentIndex = (childIndex - 1) / 2;
+
+            if (comparator.compare(items.get(childIndex), items.get(parentIndex)) < 0) {
+                swap(items, childIndex, parentIndex);
+                childIndex = parentIndex;
+            } else {
+                break;
+            }
+        }
     }
 
     /**
@@ -123,5 +183,24 @@ public class SorterImpl<E> implements Sorter<E> {
     protected void heapSink(List<E> items, int heapSize, Comparator<E> comparator) {
         // TODO sink items[0] down the heap until
         //      2*i+1>=heapSize || (items[i] <= items[2*i+1] && items[i] <= items[2*i+2])
+        int parentIndex = 0;
+
+        while (true) {
+            int leftChildIndex = 2 * parentIndex + 1;
+            int rightChildIndex = 2 * parentIndex + 2;
+            int smallest = parentIndex;
+
+            if (leftChildIndex < heapSize && comparator.compare(items.get(leftChildIndex), items.get(smallest)) < 0)
+                smallest = leftChildIndex;
+
+            if (rightChildIndex < heapSize && comparator.compare(items.get(rightChildIndex), items.get(smallest)) < 0)
+                smallest = rightChildIndex;
+
+            if (smallest == parentIndex)
+                break;
+
+            swap(items, parentIndex, smallest);
+            parentIndex = smallest;
+        }
     }
 }
