@@ -29,10 +29,7 @@ public class Party {
     public Party(int id, String name) {
         this.id = id;
         this.name = name;
-
-        // TODO initialise this.candidates with an appropriate Set implementation
-
-
+        this.candidates = new HashSet<Candidate>();
     }
 
     /**
@@ -46,17 +43,20 @@ public class Party {
      *              or otherwise the newCandidate itself
      */
     public Candidate addOrGetCandidate(Candidate newCandidate) {
-
         // associate the new Candidate with this party
         newCandidate.setParty(this);
 
         // TODO try to add the newCandidate to the set of candidates,
         //  and if that fails then return the existing duplicate instance that is in the set already.
+        if (!candidates.add(newCandidate)) {
+            for (Candidate candidate : candidates) {
+                if (candidate.equals(newCandidate)) {
+                    return candidate;
+                }
+            }
+        }
 
-
-
-
-        return null; // replace by a proper outcome
+        return newCandidate;
     }
 
     @Override
@@ -64,7 +64,8 @@ public class Party {
         return "Party{" +
                 "id=" + id +
                 ",name='" + name + "'" +
-                '}';
+                '}'
+            ;
     }
 
     @Override
@@ -72,21 +73,12 @@ public class Party {
         if (this == o) return true;
         if (!(o instanceof Party)) return false;
         Party other = (Party) o;
-
-        // TODO provide the equality criterion to identify unique party instances
-
-
-
-        return false; // replace by a proper outcome
+        return id == other.id;
     }
 
     @Override
     public int hashCode() {
-        // TODO provide a hashCode that is consistent with above equality criterion
-
-
-
-        return 0; // replace by a proper outcome
+        return Objects.hash(id);
     }
 
     public int getId() {
@@ -121,7 +113,6 @@ public class Party {
                 }
                 parser.findAndAcceptEndTag(REGISTERED_NAME);
                 parser.findAndAcceptEndTag(PARTY_IDENTIFIER);
-
             }
 
             // work around effective final constraint of global variables in lambda expression
@@ -141,6 +132,7 @@ public class Party {
             parser.findAndAcceptEndTag(PARTY);
             return party;
         }
+
         return new Party(-1, INVALID_NAME);
     }
 }

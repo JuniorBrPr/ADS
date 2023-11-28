@@ -4,7 +4,6 @@ import nl.hva.ict.ads.utils.xml.XMLParser;
 
 import javax.xml.stream.XMLStreamException;
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * An electable Candidate of a Party.
