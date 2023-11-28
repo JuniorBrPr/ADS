@@ -23,6 +23,7 @@ public class Candidate {
         this.lastNamePrefix = lastNamePrefix;
         this.lastName = lastName;
     }
+
     public Candidate(String firstName, String lastNamePrefix, String lastName, Party party) {
         this(firstName, lastNamePrefix, lastName);
         this.setParty(party);
@@ -41,10 +42,13 @@ public class Candidate {
         // every candidate shall have a last name
         String fullName = lastName;
 
-        // TODO prepend optional lastNamePrefix and optional firstName
-        //  to compose a unique and nicely formatted full name
+        if (lastNamePrefix != null && !lastNamePrefix.isEmpty()) {
+            fullName = lastNamePrefix + " " + fullName;
+        }
 
-
+        if (firstName != null && !firstName.isEmpty()) {
+            fullName = firstName + " " + fullName;
+        }
 
         return fullName;
     }
@@ -55,10 +59,19 @@ public class Candidate {
 
     @Override
     public String toString() {
-        return "Candidate{" +
-                "partyId=" + party.getId() +
-                ",name='" + getFullName() + "'" +
-                "}";
+        if (party != null) {
+            return "Candidate{" +
+                    "partyId=" + party.getId() +
+                    ",name='" + getFullName() + "'" +
+                    "}"
+                ;
+        } else {
+           return  "Candidate{" +
+                    "partyId=" + null +
+                    ",name='" + getFullName() + "'" +
+                    "}"
+                ;
+        }
     }
 
     @Override
@@ -67,19 +80,13 @@ public class Candidate {
         if (!(o instanceof Candidate)) return false;
         Candidate other = (Candidate) o;
 
-        // TODO provide the equality criterion to identify unique candidate instances
-        //  hint: every candidate shall have a unique full name within his/her party.
-
-
-        return false; // replace by a proper outcome
+        // Every candidate shall have a unique full name within his/her party
+        return Objects.equals(getFullName(), other.getFullName()) && Objects.equals(getParty(), other.getParty());
     }
 
     @Override
     public int hashCode() {
-        // TODO provide a hashCode that is consistent with above equality criterion
-
-
-        return 0; // replace by a proper outcome
+        return Objects.hash(getFullName(), getParty());
     }
 
     public String getFirstName() {
