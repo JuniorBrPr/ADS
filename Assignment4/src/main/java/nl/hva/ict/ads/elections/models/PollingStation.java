@@ -29,11 +29,7 @@ public class PollingStation implements Comparable<PollingStation> {
         this.id = id;
         this.zipCode = zipCode;
         this.name = name;
-
-        // TODO initialise this.votesByCandidate with an appropriate Map implementation
-
-
-
+        this.votesByCandidate = new HashMap<>();
     }
 
     /**
@@ -42,11 +38,8 @@ public class PollingStation implements Comparable<PollingStation> {
      * @param numberOfVotes
      */
     public void addVotes(Candidate candidate, int numberOfVotes) {
-        // TODO add the number of votes for the candidate
-        //   hint: the best quality solution used one line of code...
-
-
-
+        int existingVotes = votesByCandidate.getOrDefault(candidate, 0);
+        votesByCandidate.put(candidate, existingVotes + numberOfVotes);
     }
 
     public int getVotes(Candidate candidate) {
@@ -58,10 +51,18 @@ public class PollingStation implements Comparable<PollingStation> {
      * @return the total number of votes in this polling station per party.
      */
     public Map<Party, Integer> getVotesByParty() {
-        // TODO accumulate the votes per candidate into a map of total vote counts by party
+        Map<Party, Integer> voteMap = new HashMap<>();
+        for (Map.Entry<Candidate, Integer> entry : votesByCandidate.entrySet()) {
+            Candidate candidate = entry.getKey();
+            Integer votes = entry.getValue();
 
+            Party party = candidate.getParty();
 
-        return null; // replace by a proper outcome
+            Integer currentPartyVotes = voteMap.getOrDefault(party, 0);
+            voteMap.put(party, currentPartyVotes + votes);
+        }
+
+        return voteMap;
     }
 
     /**
