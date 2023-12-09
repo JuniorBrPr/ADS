@@ -31,7 +31,8 @@ public class Election {
 
         // TODO initialise this.parties and this.constituencies with an appropriate Map implementations
 
-
+        this.parties = new HashMap<>();
+        this.constituencies = new HashSet<>();
 
     }
 
@@ -53,10 +54,10 @@ public class Election {
      * @return  the party with given id, or null if no such party exists.
      */
     public Party getParty(int id) {
-        // TODO find the party with the given id
-
-
-        return null; // replace by a proper outcome
+        return getParties().stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     public Set<? extends Constituency> getConstituencies() {
@@ -69,10 +70,10 @@ public class Election {
      * @return alle unique candidates organised by increasing party-id
      */
     public List<Candidate> getAllCandidates() {
-        // TODO find all candidates organised by increasing party-id
-
-
-        return null; // replace by a proper outcome
+        return getParties().stream()
+                .map(Party::getCandidates)
+                .flatMap(Collection::stream)
+                .toList();
     }
 
     /**
