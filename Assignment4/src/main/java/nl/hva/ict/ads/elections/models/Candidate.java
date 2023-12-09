@@ -76,8 +76,7 @@ public class Candidate {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Candidate)) return false;
-        Candidate other = (Candidate) o;
+        if (!(o instanceof Candidate other)) return false;
 
         // Every candidate shall have a unique full name within his/her party
         return Objects.equals(getFullName(), other.getFullName()) && Objects.equals(getParty(), other.getParty());
