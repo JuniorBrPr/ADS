@@ -46,8 +46,8 @@ public class Party {
         // associate the new Candidate with this party
         newCandidate.setParty(this);
 
-        // TODO try to add the newCandidate to the set of candidates,
-        //  and if that fails then return the existing duplicate instance that is in the set already.
+        // Trying to add the newCandidate to the set of candidates,
+        // and if that fails then return the existing duplicate instance that is in the set already.
         if (!candidates.add(newCandidate)) {
             for (Candidate candidate : candidates) {
                 if (candidate.equals(newCandidate)) {
