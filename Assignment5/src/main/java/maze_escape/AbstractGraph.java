@@ -65,15 +65,35 @@ public abstract class AbstractGraph<V> {
      * @return
      */
     public String formatAdjacencyList(V firstVertex) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Graph adjacency list:\n");
 
-        // TODO recursively build the adjacency list including all vertices that can be reached from firstVertex
-        //  following a recursive pre-order traversal of a spanning tree
-        //  using the above stringBuilder to format the list
-        //  hint: use the getNeighbours() method to retrieve the roots of the child subtrees.
+        // Process for firstVertex is separated
+        stringBuilder.append(firstVertex.toString()).append(": [");
+        appendWithComma(stringBuilder, getNeighbours(firstVertex));
+        stringBuilder.append("]\n");
 
+        // Process for other vertices
+        for (V vertex : getAllVertices(firstVertex)) {
+            // Skip if it's the firstVertex (already handled)
+            if (!vertex.equals(firstVertex)) {
+                stringBuilder.append(vertex.toString()).append(": [");
+                appendWithComma(stringBuilder, getNeighbours(vertex));
+                stringBuilder.append("]\n");
+            }
+        }
+        return stringBuilder.toString();
+    }
 
-        // return the result
-        return "Graph adjacency list:\n";
+    // Helper method for adding commas correctly
+    private void appendWithComma(StringBuilder stringBuilder, Collection<V> items) {
+        Iterator<V> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            stringBuilder.append(iterator.next().toString());
+            if (iterator.hasNext()) {
+                stringBuilder.append(",");
+            }
+        }
     }
 
     /**
