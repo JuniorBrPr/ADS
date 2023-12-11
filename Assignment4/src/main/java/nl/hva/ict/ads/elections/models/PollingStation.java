@@ -43,7 +43,7 @@ public class PollingStation implements Comparable<PollingStation> {
     }
 
     public int getVotes(Candidate candidate) {
-        return this.votesByCandidate.get(candidate);
+        return this.votesByCandidate.getOrDefault(candidate, 0);
     }
 
     /**
