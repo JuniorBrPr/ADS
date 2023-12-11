@@ -4,9 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ADS</groupId>
-    <artifactId>Assignment5</artifactId>
+    <groupId>nl.hva.ads</groupId>
+    <artifactId>maze-escape</artifactId>
     <version>23.1</version>
+    <name>A5_MazeEscape_starter</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -41,5 +42,5 @@
             </plugin>
         </plugins>
     </build>
-
+    
 </project>
