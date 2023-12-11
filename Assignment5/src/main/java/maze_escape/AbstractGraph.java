@@ -85,7 +85,12 @@ public abstract class AbstractGraph<V> {
         return stringBuilder.toString();
     }
 
-    // Helper method for adding commas correctly
+    /**
+     * Appends each item in the collection to the StringBuilder with a comma delimiter.
+     *
+     * @param stringBuilder The StringBuilder to append the items to.
+     * @param items The collection of items to be appended.
+     */
     private void appendWithComma(StringBuilder stringBuilder, Collection<V> items) {
         Iterator<V> iterator = items.iterator();
         while (iterator.hasNext()) {
@@ -106,13 +111,47 @@ public abstract class AbstractGraph<V> {
      * or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath depthFirstSearch(V startVertex, V targetVertex) {
-
         if (startVertex == null || targetVertex == null) return null;
+        GPath path = new GPath();
+        path.visited.add(startVertex);
+        return depthFirstSearchRecursive(startVertex, targetVertex, path);
+    }
 
-        // TODO calculate the path from start to target by recursive depth-first-search
+    /**
+     * Uses a depth-first search algorithm to find a path from the startVertex to targetVertex in the subgraph.
+     * All vertices that are being visited by the search should also be registered in path.visited.
+     *
+     * @param startVertex The starting vertex for the search
+     * @param targetVertex The target vertex to find a path to
+     * @param path The GPath object to store the path and visited vertices
+     * @return The path from startVertex to targetVertex, or null if targetVertex cannot be reached from startVertex
+     */
+    private GPath depthFirstSearchRecursive(V startVertex, V targetVertex, GPath path) {
+        // If the start vertex is the same as target, we have found a path
+        if (startVertex.equals(targetVertex)) {
+            path.vertices.add(startVertex);
+            return path;
+        }
 
+        // If the start vertex is not the target, go through each neighbour of the start vertex
+        for (V neighbour : getNeighbours(startVertex)) {
 
-        return null;    // replace by a proper outcome, if any
+            // If the neighbour has not been visited yet, add it to the visited list and do a recursive search
+            if (!path.visited.contains(neighbour)) {
+                path.visited.add(neighbour);
+
+                // Perform DFS on the unvisited neighbour
+                GPath result = depthFirstSearchRecursive(neighbour, targetVertex, path);
+
+                // If a path is returned (i.e., not null), then add the current vertex at the start of the path
+                if (result != null) {
+                    path.vertices.addFirst(startVertex);
+                    return path;
+                }
+            }
+        }
+
+        return null; // If no path to the targetVertex can be found from the current startVertex
     }
 
     /**
@@ -130,8 +169,13 @@ public abstract class AbstractGraph<V> {
 
         // TODO calculate the path from start to target by breadth-first-search
 
-
-        return null;    // replace by a proper outcome, if any
+        GPath path = new GPath();
+        path.visited.add(startVertex);
+        path.vertices.add(startVertex);
+        Queue<V> queue = new LinkedList<>();
+        queue.add(startVertex);
+        // TODO: Finish this. brain.exe stopped working.
+        return null;
     }
 
     /**
