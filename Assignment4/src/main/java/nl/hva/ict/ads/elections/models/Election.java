@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -259,20 +258,6 @@ public class Election {
                 .append("\nTop 10 sorted election results within the Amsterdam Wibautstraat area with zipcodes between 1091AA and 1091ZZ ordered by decreasing party percentage:\n\n").append(sortedElectionResultsByPartyPercentage(10, getVotesByPartyAcrossPollingStations(getPollingStationsByZipCodeRange("1091AA", "1091ZZ")))).append("\n")
                 .append("\nMost representative polling station is:\n\n").append(findMostRepresentativePollingStation()).append("\n\n")
                 .append(sortedElectionResultsByPartyPercentage(parties.size(), findMostRepresentativePollingStation().getVotesByParty())).append("\n");
-
-        // TODO report the total number of parties in the election
-        // TODO report the list of all parties ordered by increasing party-Id
-        // TODO report the total number of constituencies in the election
-        // TODO report the total number of polling stations in the election
-        // TODO report the total number of (different) candidates in the election
-        // TODO report the list with all candidates which have a counter part with a duplicate name in a different party
-
-        // TODO report the sorted list of overall election results ordered by decreasing party percentage
-        // TODO report the polling stations within the Amsterdam Wibautstraat area with zipcodes between 1091AA and 1091ZZ
-        // TODO report the top 10 sorted election results within the Amsterdam Wibautstraat area
-        //   with zipcodes between 1091AA and 1091ZZ ordered by decreasing party percentage
-        // TODO report the most representative polling station across the election
-        // TODO report the sorted election results by decreasing party percentage of the most representative polling station
 
         return summary.toString();
     }
