@@ -164,18 +164,56 @@ public abstract class AbstractGraph<V> {
      * or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath breadthFirstSearch(V startVertex, V targetVertex) {
-
         if (startVertex == null || targetVertex == null) return null;
 
-        // TODO calculate the path from start to target by breadth-first-search
-
         GPath path = new GPath();
-        path.visited.add(startVertex);
-        path.vertices.add(startVertex);
+
+        // If the start vertex is the same as target, we have found a path
+        if (startVertex.equals(targetVertex)) {
+            visitVertexIfNotVisited(path, startVertex);
+            return path;
+        }
+
+        // Create a queue to hold the vertices to be visited
         Queue<V> queue = new LinkedList<>();
         queue.add(startVertex);
-        // TODO: Finish this. brain.exe stopped working.
+
+        while (!queue.isEmpty()) {
+            // Remove the head of the queue and visit the vertex
+            V v = queue.poll();
+            visitVertexIfNotVisited(path, v);
+
+            // Check if the neighbors of the current vertex contain the target.
+            // If true, visit the target vertex and return the path.
+            if (getNeighbours(v).contains(targetVertex)) {
+                visitVertexIfNotVisited(path, targetVertex);
+                return path;
+            }
+
+            // Iterate over the neighbors of the current vertex
+            for (V neighbour : getNeighbours(v)) {
+                // If the neighbor has not been visited, add it to the queue
+                if (!path.visited.contains(neighbour)) {
+                    queue.add(neighbour);
+                }
+            }
+        }
+        // If the target vertex is not reachable from the start vertex, return null.
         return null;
+    }
+
+    /**
+     * Visits the given vertex in the graph if it has not been visited before.
+     * If the vertex is not visited, it adds it to the visited set and to the vertices queue.
+     *
+     * @param path   The GPath object representing the current path.
+     * @param vertex The vertex to visit.
+     */
+    private void visitVertexIfNotVisited(GPath path, V vertex) {
+        if (!path.getVisited().contains(vertex)) {
+            path.getVisited().add(vertex);
+            path.getVertices().add(vertex);
+        }
     }
 
     /**
