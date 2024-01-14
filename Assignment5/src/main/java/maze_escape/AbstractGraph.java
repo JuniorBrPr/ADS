@@ -34,7 +34,7 @@ public abstract class AbstractGraph<V> {
      * @return
      */
     public Set<V> getAllVertices(V firstVertex) {
-        HashSet<V> visited = new HashSet<>();
+        Set<V> visited = new HashSet<>();
         visited.add(firstVertex);
         Queue<V> queue = new LinkedList<>();
         queue.add(firstVertex);
@@ -77,7 +77,7 @@ public abstract class AbstractGraph<V> {
         for (V vertex : getAllVertices(firstVertex)) {
             // Skip if it's the firstVertex (already handled)
             if (!vertex.equals(firstVertex)) {
-                stringBuilder.append(vertex.toString()).append(": [");
+                stringBuilder.append(vertex).append(": [");
                 appendWithComma(stringBuilder, getNeighbours(vertex));
                 stringBuilder.append("]\n");
             }
@@ -89,7 +89,7 @@ public abstract class AbstractGraph<V> {
      * Appends each item in the collection to the StringBuilder with a comma delimiter.
      *
      * @param stringBuilder The StringBuilder to append the items to.
-     * @param items The collection of items to be appended.
+     * @param items         The collection of items to be appended.
      */
     private void appendWithComma(StringBuilder stringBuilder, Collection<V> items) {
         Iterator<V> iterator = items.iterator();
@@ -121,9 +121,9 @@ public abstract class AbstractGraph<V> {
      * Uses a depth-first search algorithm to find a path from the startVertex to targetVertex in the subgraph.
      * All vertices that are being visited by the search should also be registered in path.visited.
      *
-     * @param startVertex The starting vertex for the search
+     * @param startVertex  The starting vertex for the search
      * @param targetVertex The target vertex to find a path to
-     * @param path The GPath object to store the path and visited vertices
+     * @param path         The GPath object to store the path and visited vertices
      * @return The path from startVertex to targetVertex, or null if targetVertex cannot be reached from startVertex
      */
     private GPath depthFirstSearchRecursive(V startVertex, V targetVertex, GPath path) {
@@ -167,53 +167,41 @@ public abstract class AbstractGraph<V> {
         if (startVertex == null || targetVertex == null) return null;
 
         GPath path = new GPath();
-
-        // If the start vertex is the same as target, we have found a path
-        if (startVertex.equals(targetVertex)) {
-            visitVertexIfNotVisited(path, startVertex);
-            return path;
-        }
-
-        // Create a queue to hold the vertices to be visited
+        Map<V, V> parents = new HashMap<>();
+        Set<V> visited = new HashSet<>();
         Queue<V> queue = new LinkedList<>();
+
         queue.add(startVertex);
 
         while (!queue.isEmpty()) {
-            // Remove the head of the queue and visit the vertex
-            V v = queue.poll();
-            visitVertexIfNotVisited(path, v);
+            V currentVertex = queue.poll();
+            visited.add(startVertex);
 
-            // Check if the neighbors of the current vertex contain the target.
-            // If true, visit the target vertex and return the path.
-            if (getNeighbours(v).contains(targetVertex)) {
-                visitVertexIfNotVisited(path, targetVertex);
-                return path;
+            if (currentVertex.equals(targetVertex)) {
+                return buildPathFromParents(path, currentVertex, parents, visited);
             }
 
-            // Iterate over the neighbors of the current vertex
-            for (V neighbour : getNeighbours(v)) {
-                // If the neighbor has not been visited, add it to the queue
-                if (!path.visited.contains(neighbour)) {
+            for (V neighbour : getNeighbours(currentVertex)) {
+                if (!visited.contains(neighbour)) {
+                    parents.put(neighbour, currentVertex);
+                    visited.add(neighbour);
+                    if (neighbour.equals(targetVertex)) {
+                        return buildPathFromParents(path, neighbour, parents, visited);
+                    }
                     queue.add(neighbour);
                 }
             }
         }
-        // If the target vertex is not reachable from the start vertex, return null.
         return null;
     }
 
-    /**
-     * Visits the given vertex in the graph if it has not been visited before.
-     * If the vertex is not visited, it adds it to the visited set and to the vertices queue.
-     *
-     * @param path   The GPath object representing the current path.
-     * @param vertex The vertex to visit.
-     */
-    private void visitVertexIfNotVisited(GPath path, V vertex) {
-        if (!path.getVisited().contains(vertex)) {
-            path.getVisited().add(vertex);
-            path.getVertices().add(vertex);
-        }
+    private static <V> AbstractGraph<V>.GPath buildPathFromParents(AbstractGraph<V>.GPath path, V currentVertex, Map<V, V> parents, Set<V> visited) {
+        do {
+            path.vertices.addFirst(currentVertex);  // Add vertex at the front of the list
+            currentVertex = parents.get(currentVertex);  // Move to its parent node
+        } while (currentVertex != null);
+        path.visited.addAll(visited);
+        return path;
     }
 
     /**
@@ -308,8 +296,8 @@ public abstract class AbstractGraph<V> {
          **/
         private static final int DISPLAY_CUT = 10;
         private final Deque<V> vertices = new LinkedList<>();
-        private double totalWeight = 0.0;
         private final Set<V> visited = new HashSet<>();
+        private double totalWeight = 0.0;
 
         @Override
         public String toString() {
