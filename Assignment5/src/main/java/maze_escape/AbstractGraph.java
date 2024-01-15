@@ -169,45 +169,39 @@ public abstract class AbstractGraph<V> {
      * or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath breadthFirstSearch(V startVertex, V targetVertex) {
-        // If startVertex or targetVertex is null, return null as there is no possible path to be found.
         if (startVertex == null || targetVertex == null) return null;
 
-        GPath path = new GPath();
-        Map<V, V> parentVertices = new HashMap<>();
+        Set<V> visited = new HashSet<>();
+        Map<V, V> previousVertexMap = new HashMap<>();
         Queue<V> queue = new LinkedList<>();
-        queue.add(startVertex);
+        GPath path = new GPath();
 
-        V currentVertex = startVertex;
+        queue.add(startVertex);
+        visited.add(startVertex);
         while (!queue.isEmpty()) {
-            currentVertex = queue.poll();
-            path.visited.add(startVertex);
+            V currentVertex = queue.poll(); // Get the first vertex in the queue
 
             if (currentVertex.equals(targetVertex)) {
-                break; // Stop if target vertex is reached
+                while (currentVertex != null) {
+                    path.getVertices().add(currentVertex); // Add vertex to the path
+                    currentVertex = previousVertexMap.get(currentVertex); // Move to its parent node
+                }
+                Collections.reverse((LinkedList<V>) path.getVertices()); // Reverse the path to get: start -> target
+                path.getVisited().addAll(visited); // Add all visited vertices to the path
+                return path;
             }
 
-            for (V neighbour : getNeighbours(currentVertex)) {
-                if (!path.visited.contains(neighbour)) {
-                    parentVertices.put(neighbour, currentVertex);
-                    path.visited.add(neighbour);
-                    if (neighbour.equals(targetVertex)) {
-                        break;  // Stop if target vertex is reached
-                    }
-                    queue.add(neighbour);
+            for (V neighbor : getNeighbours(currentVertex)) {
+                // If the neighbor has not been visited yet, add it to the queue and visited list and set its parent
+                if (!visited.contains(neighbor)) {
+                    queue.offer(neighbor);
+                    visited.add(neighbor);
+                    previousVertexMap.put(neighbor, currentVertex);
                 }
             }
         }
 
-        if (!path.visited.contains(targetVertex)) {
-            return null;         // If targetVertex is not reachable from startVertex
-        }
-
-        // Constructing path from end node by tracking each parent node
-        do {
-            path.vertices.addFirst(currentVertex);  // Add vertex at the front of the list
-            currentVertex = parentVertices.get(currentVertex);  // Move to its parent node
-        } while (currentVertex != null);
-        return path;
+        return null; // Target not found
     }
 
     /**

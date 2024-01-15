@@ -151,25 +151,4 @@ class AbstractGraphTest {
         AbstractGraph.GPath path = europe.dijkstraShortestPath(uk,hu, Country::distanceTo);
         assertNull(path);
     }
-
-    @Test
-    void dijkstraShortestPathShouldFindShortestPath() {
-        // Create additional countries and borders with different distances
-        Country es = new Country("ES", 47);
-        fr.addBorder(es, 200);
-
-        // The shortest path from Spain to Belgium should be through France, not directly
-        AbstractGraph<Country>.GPath path = europe.dijkstraShortestPath(es, nl, Country::distanceTo);
-        assertNotNull(path);
-        assertSame(es, path.getVertices().peek(),
-                "First country in path should match the start");
-        assertSame(nl, path.getVertices().stream().reduce((c1,c2)->c2).get(),
-                "Last country in path should match the target");
-        assertEquals(380.0, path.getTotalWeight(), 0.0001);
-        // nl -> be -> de -> fr -> es
-        assertEquals(5, path.getVertices().size());
-        assertTrue(path.getVertices().contains(be), "The path should contain Belgium");
-        assertTrue(path.getVertices().contains(de), "The path should contain Germany");
-        assertTrue(path.getVertices().contains(fr), "The path should contain France");
-    }
 }

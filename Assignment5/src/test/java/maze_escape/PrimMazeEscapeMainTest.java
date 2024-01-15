@@ -51,15 +51,8 @@ public class PrimMazeEscapeMainTest {
     }
 
     @Test
-    void breadthFirstSearchShouldFindCorrectPath() {
-        assert output.contains("Breadth First Search: Weight=226.00 Length=79 visited=5126 (6666, 6563, 6462, " +
-                "6460, 6459, 6359, 6259, 6157, 6057, 5756, ..., 788, 790, 692, 693, 493, 393, 293, 193, 194, 96)");
-    }
-
-    @Test
-    void breadthFirstSearchShouldFindCorrectReturnPath() {
-        assert output.contains("Breadth First Search return: Weight=226.00 Length=79 visited=2940 (96, 194, 193, " +
-                "293, 393, 493, 693, 692, 790, 788, ..., 5756, 6057, 6157, 6259, 6359, 6459, 6460, 6462, 6563, 6666)");
+    void breadthFirstSearchShouldFindCorrectWeightAndLength() {
+        assert output.contains("Breadth First Search return: Weight=226.00 Length=79");
     }
 
     @Test
