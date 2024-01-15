@@ -167,26 +167,25 @@ public abstract class AbstractGraph<V> {
         if (startVertex == null || targetVertex == null) return null;
 
         GPath path = new GPath();
-        Map<V, V> parents = new HashMap<>();
-        Set<V> visited = new HashSet<>();
+        Map<V, V> parentVertices = new HashMap<>();
         Queue<V> queue = new LinkedList<>();
 
         queue.add(startVertex);
 
         while (!queue.isEmpty()) {
             V currentVertex = queue.poll();
-            visited.add(startVertex);
+            path.visited.add(startVertex);
 
             if (currentVertex.equals(targetVertex)) {
-                return buildPathFromParents(path, currentVertex, parents, visited);
+                return buildPathFromParents(path, currentVertex, parentVertices);
             }
 
             for (V neighbour : getNeighbours(currentVertex)) {
-                if (!visited.contains(neighbour)) {
-                    parents.put(neighbour, currentVertex);
-                    visited.add(neighbour);
+                if (!path.visited.contains(neighbour)) {
+                    parentVertices.put(neighbour, currentVertex);
+                    path.visited.add(neighbour);
                     if (neighbour.equals(targetVertex)) {
-                        return buildPathFromParents(path, neighbour, parents, visited);
+                        return buildPathFromParents(path, neighbour, parentVertices);
                     }
                     queue.add(neighbour);
                 }
@@ -195,12 +194,12 @@ public abstract class AbstractGraph<V> {
         return null;
     }
 
-    private static <V> AbstractGraph<V>.GPath buildPathFromParents(AbstractGraph<V>.GPath path, V currentVertex, Map<V, V> parents, Set<V> visited) {
+    private static <V> AbstractGraph<V>.GPath buildPathFromParents(AbstractGraph<V>.GPath path, V currentVertex,
+                                                                   Map<V, V> parents) {
         do {
             path.vertices.addFirst(currentVertex);  // Add vertex at the front of the list
             currentVertex = parents.get(currentVertex);  // Move to its parent node
         } while (currentVertex != null);
-        path.visited.addAll(visited);
         return path;
     }
 
