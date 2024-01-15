@@ -194,11 +194,11 @@ public abstract class AbstractGraph<V> {
         return null;
     }
 
-    private static <V> AbstractGraph<V>.GPath buildPathFromParents(AbstractGraph<V>.GPath path, V currentVertex,
-                                                                   Map<V, V> parents) {
+    private <V> AbstractGraph<V>.GPath buildPathFromParents(AbstractGraph<V>.GPath path, V currentVertex,
+                                                                   Map<V, V> parentVertices) {
         do {
             path.vertices.addFirst(currentVertex);  // Add vertex at the front of the list
-            currentVertex = parents.get(currentVertex);  // Move to its parent node
+            currentVertex = parentVertices.get(currentVertex);  // Move to its parent node
         } while (currentVertex != null);
         return path;
     }
