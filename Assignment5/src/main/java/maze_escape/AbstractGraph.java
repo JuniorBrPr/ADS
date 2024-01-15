@@ -34,12 +34,14 @@ public abstract class AbstractGraph<V> {
      * @return
      */
     public Set<V> getAllVertices(V firstVertex) {
-        Set<V> visited = new HashSet<>();
+        Set<V> visited = new HashSet<>(); // Set to keep track of visited vertices
         visited.add(firstVertex);
-        Queue<V> queue = new LinkedList<>();
+        Queue<V> queue = new LinkedList<>(); // Queue to keep track of vertices to be visited
         queue.add(firstVertex);
+
         while (!queue.isEmpty()) {
             V v = queue.poll();
+            // Add all unvisited neighbours to the queue
             for (V neighbour : getNeighbours(v)) {
                 if (!visited.contains(neighbour)) {
                     visited.add(neighbour);
@@ -111,9 +113,12 @@ public abstract class AbstractGraph<V> {
      * or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath depthFirstSearch(V startVertex, V targetVertex) {
+        // If startVertex or targetVertex is null, return null as there is no possible path to be found.
         if (startVertex == null || targetVertex == null) return null;
         GPath path = new GPath();
+        // Add startVertex to visited list
         path.visited.add(startVertex);
+        // Call recursive DFS method
         return depthFirstSearchRecursive(startVertex, targetVertex, path);
     }
 
@@ -164,20 +169,21 @@ public abstract class AbstractGraph<V> {
      * or null if target cannot be matched with a vertex in the sub-graph from startVertex
      */
     public GPath breadthFirstSearch(V startVertex, V targetVertex) {
+        // If startVertex or targetVertex is null, return null as there is no possible path to be found.
         if (startVertex == null || targetVertex == null) return null;
 
         GPath path = new GPath();
         Map<V, V> parentVertices = new HashMap<>();
         Queue<V> queue = new LinkedList<>();
-
         queue.add(startVertex);
 
+        V currentVertex = startVertex;
         while (!queue.isEmpty()) {
-            V currentVertex = queue.poll();
+            currentVertex = queue.poll();
             path.visited.add(startVertex);
 
             if (currentVertex.equals(targetVertex)) {
-                return buildPathFromParents(path, currentVertex, parentVertices);
+                break; // Stop if target vertex is reached
             }
 
             for (V neighbour : getNeighbours(currentVertex)) {
@@ -185,17 +191,18 @@ public abstract class AbstractGraph<V> {
                     parentVertices.put(neighbour, currentVertex);
                     path.visited.add(neighbour);
                     if (neighbour.equals(targetVertex)) {
-                        return buildPathFromParents(path, neighbour, parentVertices);
+                        break;  // Stop if target vertex is reached
                     }
                     queue.add(neighbour);
                 }
             }
         }
-        return null;
-    }
 
-    private <V> AbstractGraph<V>.GPath buildPathFromParents(AbstractGraph<V>.GPath path, V currentVertex,
-                                                                   Map<V, V> parentVertices) {
+        if (!path.visited.contains(targetVertex)) {
+            return null;         // If targetVertex is not reachable from startVertex
+        }
+
+        // Constructing path from end node by tracking each parent node
         do {
             path.vertices.addFirst(currentVertex);  // Add vertex at the front of the list
             currentVertex = parentVertices.get(currentVertex);  // Move to its parent node
@@ -219,20 +226,15 @@ public abstract class AbstractGraph<V> {
         if (startVertex == null || targetVertex == null) return null;
 
         GPath path = new GPath();
+        Map<V, MSTNode> minimumSpanningTree = new HashMap<>(); // Map to keep track of minimum spanning tree
 
-        // Map to keep track of minimum spanning tree
-        Map<V, MSTNode> minimumSpanningTree = new HashMap<>();
-
-        // Start node initialization
         MSTNode startNode = new MSTNode(startVertex);
         startNode.weightSumTo = 0.0;
         minimumSpanningTree.put(startVertex, startNode);
 
-        // Priority Queue to select the least weight node
-        PriorityQueue<MSTNode> queue = new PriorityQueue<>();
+        PriorityQueue<MSTNode> queue = new PriorityQueue<>(); // Priority Queue to select the least weight node
         queue.add(startNode);
 
-        // Proceed until all vertices are covered
         while (!queue.isEmpty()) {
             MSTNode currentNode = queue.poll();  // Get the node with the lowest weight
             path.visited.add(currentNode.vertex);
@@ -241,10 +243,7 @@ public abstract class AbstractGraph<V> {
                 break;  // Stop if target vertex is reached
             }
 
-            // For all neighbours of currentNode do
             for (V neighbour : getNeighbours(currentNode.vertex)) {
-
-                // If neighbour node is not visited
                 if (!path.visited.contains(neighbour)) {
                     MSTNode neighbourNode = minimumSpanningTree.computeIfAbsent(neighbour, MSTNode::new);
 
@@ -270,9 +269,8 @@ public abstract class AbstractGraph<V> {
             }
         }
 
-        // If targetVertex is not reachable from startVertex
         if (!minimumSpanningTree.containsKey(targetVertex)) {
-            return null;
+            return null; // If targetVertex is not reachable from startVertex
         }
 
         // Constructing path from end node by tracking each parent node
