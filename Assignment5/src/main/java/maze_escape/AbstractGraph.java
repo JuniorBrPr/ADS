@@ -219,33 +219,37 @@ public abstract class AbstractGraph<V> {
         // If startVertex or targetVertex is null, return null as there is no possible path to be found.
         if (startVertex == null || targetVertex == null) return null;
 
+        GPath path = new GPath();
+
         // Map to keep track of minimum spanning tree
         Map<V, MSTNode> minimumSpanningTree = new HashMap<>();
-
-        // Priority Queue to select the least weight node
-        PriorityQueue<MSTNode> queue = new PriorityQueue<>();
 
         // Start node initialization
         MSTNode startNode = new MSTNode(startVertex);
         startNode.weightSumTo = 0.0;
         minimumSpanningTree.put(startVertex, startNode);
+
+        // Priority Queue to select the least weight node
+        PriorityQueue<MSTNode> queue = new PriorityQueue<>();
         queue.add(startNode);
 
         // Proceed until all vertices are covered
         while (!queue.isEmpty()) {
             MSTNode currentNode = queue.poll();  // Get the node with the lowest weight
-            currentNode.marked = true;  // Mark the current node as visited
+            path.visited.add(currentNode.vertex);
+
             if (currentNode.vertex.equals(targetVertex)) {
                 break;  // Stop if target vertex is reached
             }
 
             // For all neighbours of currentNode do
             for (V neighbour : getNeighbours(currentNode.vertex)) {
-                // If neighbour node is not in the minimum spanning tree, add it
-                MSTNode neighbourNode = minimumSpanningTree.computeIfAbsent(neighbour, MSTNode::new);
 
                 // If neighbour node is not visited
-                if (!neighbourNode.marked) {
+                if (!path.visited.contains(neighbour)) {
+                    MSTNode neighbourNode = minimumSpanningTree.computeIfAbsent(neighbour, MSTNode::new);
+
+                    path.visited.add(neighbour);
                     // Weight of edge from currentNode to neighbour
                     double weight = weightMapper.apply(currentNode.vertex, neighbour);
                     // Total weight from start node to neighbour through currentNode
@@ -259,6 +263,10 @@ public abstract class AbstractGraph<V> {
                         queue.remove(neighbourNode);
                         queue.add(neighbourNode);
                     }
+
+                    if (neighbour.equals(targetVertex)) {
+                        break;  // Stop if target vertex is reached
+                    }
                 }
             }
         }
@@ -269,11 +277,9 @@ public abstract class AbstractGraph<V> {
         }
 
         // Constructing path from end node by tracking each parent node
-        GPath path = new GPath();
         V currentVertex = targetVertex;
         while (currentVertex != null) {
             path.vertices.addFirst(currentVertex);  // Add vertex at the front of the list
-            path.visited.add(currentVertex);
             currentVertex = minimumSpanningTree.get(currentVertex).parentVertex;  // Move to its parent node
         }
 

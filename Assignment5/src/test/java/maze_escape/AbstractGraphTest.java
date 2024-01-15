@@ -99,7 +99,6 @@ class AbstractGraphTest {
     @Test
     void breadthFirstSearchShouldFindPathAndVisited() {
         AbstractGraph.GPath path = europe.breadthFirstSearch(uk,lux);
-        System.out.println(path);
         assertNotNull(path);
         assertSame(uk, path.getVertices().peek(),
                 "First country in path should match the start");
